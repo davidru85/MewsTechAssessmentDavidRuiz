@@ -2,10 +2,12 @@ package com.mews.guestroom.core.ui.theme
 
 import androidx.compose.material3.Typography
 import androidx.compose.ui.text.ExperimentalTextApi
+import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.Font
 import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontVariation
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.unit.TextUnit
 import androidx.compose.ui.unit.em
 import com.mews.guestroom.core.ui.R
 
@@ -35,25 +37,31 @@ val Manrope: FontFamily =
  * - Titles (subheaders): **SemiBold**, open tracking (+0.01em).
  * - Body & labels: **Medium**, default tracking for legibility.
  */
+private fun TextStyle.brand(weight: FontWeight, tracking: TextUnit = letterSpacing): TextStyle =
+    copy(fontFamily = Manrope, fontWeight = weight, letterSpacing = tracking)
+
 val GuestRoomTypography: Typography =
     Typography().run {
+        val bold = FontWeight.Bold
+        val semi = FontWeight.SemiBold
+        val medium = FontWeight.Medium
         val headline = (-0.02).em
         val subheader = 0.01.em
         copy(
-            displayLarge = displayLarge.copy(fontFamily = Manrope, fontWeight = FontWeight.Bold, letterSpacing = headline),
-            displayMedium = displayMedium.copy(fontFamily = Manrope, fontWeight = FontWeight.Bold, letterSpacing = headline),
-            displaySmall = displaySmall.copy(fontFamily = Manrope, fontWeight = FontWeight.Bold, letterSpacing = headline),
-            headlineLarge = headlineLarge.copy(fontFamily = Manrope, fontWeight = FontWeight.Bold, letterSpacing = headline),
-            headlineMedium = headlineMedium.copy(fontFamily = Manrope, fontWeight = FontWeight.Bold, letterSpacing = headline),
-            headlineSmall = headlineSmall.copy(fontFamily = Manrope, fontWeight = FontWeight.Bold, letterSpacing = headline),
-            titleLarge = titleLarge.copy(fontFamily = Manrope, fontWeight = FontWeight.SemiBold, letterSpacing = subheader),
-            titleMedium = titleMedium.copy(fontFamily = Manrope, fontWeight = FontWeight.SemiBold, letterSpacing = subheader),
-            titleSmall = titleSmall.copy(fontFamily = Manrope, fontWeight = FontWeight.SemiBold, letterSpacing = subheader),
-            bodyLarge = bodyLarge.copy(fontFamily = Manrope, fontWeight = FontWeight.Medium),
-            bodyMedium = bodyMedium.copy(fontFamily = Manrope, fontWeight = FontWeight.Medium),
-            bodySmall = bodySmall.copy(fontFamily = Manrope, fontWeight = FontWeight.Medium),
-            labelLarge = labelLarge.copy(fontFamily = Manrope, fontWeight = FontWeight.Medium),
-            labelMedium = labelMedium.copy(fontFamily = Manrope, fontWeight = FontWeight.Medium),
-            labelSmall = labelSmall.copy(fontFamily = Manrope, fontWeight = FontWeight.Medium),
+            displayLarge = displayLarge.brand(bold, headline),
+            displayMedium = displayMedium.brand(bold, headline),
+            displaySmall = displaySmall.brand(bold, headline),
+            headlineLarge = headlineLarge.brand(bold, headline),
+            headlineMedium = headlineMedium.brand(bold, headline),
+            headlineSmall = headlineSmall.brand(bold, headline),
+            titleLarge = titleLarge.brand(semi, subheader),
+            titleMedium = titleMedium.brand(semi, subheader),
+            titleSmall = titleSmall.brand(semi, subheader),
+            bodyLarge = bodyLarge.brand(medium),
+            bodyMedium = bodyMedium.brand(medium),
+            bodySmall = bodySmall.brand(medium),
+            labelLarge = labelLarge.brand(medium),
+            labelMedium = labelMedium.brand(medium),
+            labelSmall = labelSmall.brand(medium),
         )
     }
