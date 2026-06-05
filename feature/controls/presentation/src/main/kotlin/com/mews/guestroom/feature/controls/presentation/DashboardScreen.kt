@@ -25,7 +25,9 @@ import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableFloatStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
@@ -116,13 +118,20 @@ private fun DashboardContent(state: DashboardUiState.Content, actions: Dashboard
 @Composable
 private fun ClimateCard(climate: Climate, onTargetTemperatureChange: (Int) -> Unit) {
     SectionCard(title = "Climate") {
+        // Track the slider locally during a drag so the thumb moves smoothly and we
+        // dispatch a single command on release — not one per frame. Re-keyed on the
+        // confirmed target so backend updates (and scene activations) re-sync the thumb.
+        var sliderValue by remember(climate.targetCelsius) {
+            mutableFloatStateOf(climate.targetCelsius.toFloat())
+        }
         Text(
-            text = "Now ${climate.currentCelsius}°C  ·  Target ${climate.targetCelsius}°C",
+            text = "Now ${climate.currentCelsius}°C  ·  Target ${sliderValue.roundToInt()}°C",
             style = MaterialTheme.typography.bodyLarge,
         )
         Slider(
-            value = climate.targetCelsius.toFloat(),
-            onValueChange = { onTargetTemperatureChange(it.roundToInt()) },
+            value = sliderValue,
+            onValueChange = { sliderValue = it },
+            onValueChangeFinished = { onTargetTemperatureChange(sliderValue.roundToInt()) },
             valueRange = MIN_TEMP..MAX_TEMP,
         )
     }
