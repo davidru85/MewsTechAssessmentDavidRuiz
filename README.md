@@ -28,6 +28,17 @@ Hotel rooms frustrate guests (confusing HVAC/lighting, key-card-in-slot power wa
 
 ---
 
+## Screenshots
+
+The Room Dashboard rendered on-device (`mock` flavor), built to the [DESIGN.md](DESIGN.md) "Serene Stay" spec — light and dark themes are structurally identical, only the color mapping changes.
+
+| Light | Dark |
+|---|---|
+| ![Dashboard top, light](screenshots/01_dashboard_top_light.png) | ![Dashboard top, dark](screenshots/03_dashboard_top_dark.png) |
+| ![Dashboard bottom, light](screenshots/02_dashboard_bottom_light.png) | ![Dashboard bottom, dark](screenshots/04_dashboard_bottom_dark.png) |
+
+---
+
 ## Tech Stack
 
 | Concern | Choice |
