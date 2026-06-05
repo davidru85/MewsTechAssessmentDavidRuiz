@@ -71,7 +71,7 @@ This section defines the operating model for an engineer-led product effort: how
 ## Technical Considerations
 
 - **Compose + Material 3:** Use `androidx.compose.material3` with the `MaterialTheme` and `dynamicColor` API for Material You support (Android 12+).
-- **Theme Module:** A single `:core:ui` module owns the design tokens (color, typography, shape, spacing) — every feature module depends on it.
+- **Theme Module:** A technical `:core:ui` module may own generic design tokens (color, typography, shape, spacing), but it must not contain feature-specific components or business concepts. Feature-specific UI components stay in the owning feature presentation module.
 - **Custom Components Policy:** Custom Composables only when (a) M3 lacks the component, (b) the user need is validated, (c) the custom component is documented and themable.
 - **Accessibility Tooling:** Use `Modifier.semantics { }`, content descriptions, and Compose's accessibility testing APIs; run `accessibility-test` rules in CI.
 - **Lint Rules:** ktlint + detekt with custom rules to flag hardcoded colors, hardcoded dimensions, and non-M3 component imports.

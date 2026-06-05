@@ -1,2 +1,8 @@
-.claude/
-.DS_Store
+.gradle/
+.idea/
+.vscode/
+build/
+local.properties
+
+**/build/
+
