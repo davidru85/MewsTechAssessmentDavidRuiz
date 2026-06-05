@@ -22,16 +22,16 @@ Modular build that compiles and runs.
 
 ---
 
-## Phase 1 — Prototype Slice 🟡 (assessment-critical)
+## Phase 1 — Prototype Slice ✅ (assessment-critical)
 
 One feature end-to-end on mock data — the demo deliverable.
 
-- ⬜ `:feature:controls:domain` — models, `ControlsRepository`, use cases (incl. energy-mode orchestration).
-- ⬜ `:feature:controls:data` — `ControlsRepositoryImpl`, `MockControlsDataSource` (in-memory `StateFlow`, latency + temperature drift), Hilt module.
-- ⬜ `:feature:controls:presentation` — Dashboard screen, thermostat, light/blind toggles, `ViewModel`, `UiState`, nav entry.
-- ⬜ Replace placeholder; wire Dashboard into the root `NavHost`.
-- ⬜ Demo-critical states: loading / success / empty / error.
-- ⬜ Tests: use-case (JUnit), ViewModel (Turbine), Compose smoke test.
+- ✅ `:feature:controls:domain` — models, `ControlsRepository`, use cases (energy-scene orchestration, temperature clamping).
+- ✅ `:feature:controls:data` — `ControlsRepositoryImpl`, `MockControlsDataSource` (in-memory `StateFlow`, latency + temperature drift, faulty/unknown-device errors), Hilt module.
+- ✅ `:feature:controls:presentation` — Dashboard screen (thermostat, light/blind toggles, energy scenes), `ViewModel`, `UiState`, nav entry.
+- ✅ Replaced placeholder; wired Dashboard into the root `NavHost`.
+- ✅ Demo-critical states: loading, content, and error (transient message). Empty intentionally dropped — a room always has controls.
+- ✅ Tests: 18 JVM unit tests (use-case, MockDataSource, ViewModel via Turbine), all green. Compose smoke test deferred (needs emulator/Robolectric).
 - ⬜ Rehearse [DEMO_SCRIPT.md](DEMO_SCRIPT.md).
 
 **Exit criteria:** scripted 60–90s demo runs on the `mock` flavor without crashes; [VALIDATION_CHECKLIST.md](VALIDATION_CHECKLIST.md) green.

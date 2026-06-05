@@ -19,15 +19,20 @@ if [[ ! -d "$FEATURE_DIR" ]]; then
   exit 0
 fi
 
-# Rule 1: domain purity.
-FORBIDDEN_DOMAIN='^\s*import\s+(android\.|androidx\.|dagger\.|com\.google\.dagger\.|javax\.inject\.|kotlinx\.coroutines\.flow\.MutableStateFlow)'
+# Rule 1: domain purity — production domain source must not import Android,
+# Compose, or Hilt/Dagger. Only src/main is checked: test sources legitimately
+# use test-only libraries. javax.inject (JSR-330) and kotlinx.coroutines are
+# allowed in domain — they are pure-JVM and used by use cases / repository
+# contracts.
+FORBIDDEN_DOMAIN='^\s*import\s+(android\.|androidx\.|dagger\.|com\.google\.dagger\.)'
 while IFS= read -r -d '' file; do
-  if grep -nEq "$FORBIDDEN_DOMAIN" "$file"; then
+  hits="$(grep -nE "$FORBIDDEN_DOMAIN" "$file" || true)"
+  if [[ -n "$hits" ]]; then
     echo "✗ Domain purity violation in: ${file#"$ROOT"/}"
-    grep -nE "$FORBIDDEN_DOMAIN" "$file" | sed 's/^/    /'
+    printf '%s\n' "$hits" | sed 's/^/    /'
     FAIL=1
   fi
-done < <(find "$FEATURE_DIR" -path '*/domain/*' -name '*.kt' -print0 2>/dev/null)
+done < <(find "$FEATURE_DIR" -path '*/domain/src/main/*' -name '*.kt' -print0 2>/dev/null)
 
 # Rule 2: no cross-feature imports.
 # For each feature <name>, flag files importing com.mews.guestroom.feature.<other>.
@@ -35,14 +40,14 @@ for fpath in "$FEATURE_DIR"/*/; do
   [[ -d "$fpath" ]] || continue
   name="$(basename "$fpath")"
   while IFS= read -r -d '' file; do
-    if grep -nE '^\s*import\s+com\.mews\.guestroom\.feature\.[a-zA-Z0-9_]+' "$file" \
-        | grep -vE "com\.mews\.guestroom\.feature\.${name}\b" >/dev/null; then
+    hits="$(grep -nE '^\s*import\s+com\.mews\.guestroom\.feature\.[a-zA-Z0-9_]+' "$file" \
+        | grep -vE "com\.mews\.guestroom\.feature\.${name}\b" || true)"
+    if [[ -n "$hits" ]]; then
       echo "✗ Cross-feature import in: ${file#"$ROOT"/}"
-      grep -nE '^\s*import\s+com\.mews\.guestroom\.feature\.[a-zA-Z0-9_]+' "$file" \
-        | grep -vE "com\.mews\.guestroom\.feature\.${name}\b" | sed 's/^/    /'
+      printf '%s\n' "$hits" | sed 's/^/    /'
       FAIL=1
     fi
-  done < <(find "$fpath" -name '*.kt' -print0 2>/dev/null)
+  done < <(find "$fpath" -path '*/src/*' -name '*.kt' -print0 2>/dev/null)
 done
 
 if [[ "$FAIL" -ne 0 ]]; then

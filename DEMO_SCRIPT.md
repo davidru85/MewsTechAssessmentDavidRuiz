@@ -1,7 +1,7 @@
 # Demo Script
 
 > A live, commented demo narrative for the take-home review (~5–7 minutes total, ~60–90s of app interaction).
-> Honest note: today the app runs a placeholder screen; the scripted Dashboard flow below is the first vertical slice. Where the slice isn't built yet, narrate from [PROTOTYPE_OVERVIEW.md](PROTOTYPE_OVERVIEW.md) and the mock-data design.
+> The Controls/Dashboard flow below is **implemented** and runs live on the `mock` flavor — demo it on an emulator/device.
 
 ---
 
@@ -34,9 +34,9 @@
 2. **Adjust thermostat** with the slider/dial → state updates reactively; mock ambient temperature begins drifting toward the set point.
 3. **Toggle lights / blinds** → immediate, believable state change with brief loading.
 4. **Tap "Sleep Mode"** → one action dims lights, closes blinds, sets a sleep-friendly temperature (the orchestration use case).
-5. **Show a non-happy state** (e.g. a simulated command error/loading) to prove the UI models loading/error/empty, not just success.
+5. **Show the error path** — toggle the **Bathroom** light (intentionally faulty) → an error snackbar appears, proving the UI handles failures, not just the happy path.
 
-*(Until the slice is implemented, narrate this against [PROTOTYPE_OVERVIEW.md](PROTOTYPE_OVERVIEW.md); the current build launches the placeholder in [AppRoot.kt](app/src/main/java/com/mews/guestroom/AppRoot.kt).)*
+*(`./gradlew :app:installMockDebug`, then open the app — the Dashboard is the start destination.)*
 
 ---
 

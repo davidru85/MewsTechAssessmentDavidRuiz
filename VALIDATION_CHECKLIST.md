@@ -22,11 +22,12 @@
 
 - [ ] Core flow (Dashboard: thermostat, lights/blinds, energy mode) works on the `mock` flavor.
 - [ ] Mock state is believable and time-varying (e.g. temperature drift), not static.
-- [ ] Demo-critical states present: loading, success, empty, error.
+- [ ] Demo-critical states present: loading, content, error (transient message).
 - [ ] [DEMO_SCRIPT.md](DEMO_SCRIPT.md) rehearsed end-to-end within ~60–90s.
 
 ## 4. Tests
 
+- [ ] **TDD Protocol followed** — new behaviour written test-first (red → green → refactor), each phase passing the owner's manual-review gate before commit / push / PR; compulsory per [TESTING_STRATEGY.md](TESTING_STRATEGY.md#the-tdd-protocol-mandatory).
 - [ ] Unit tests pass: `./gradlew test`.
 - [ ] First slice covered: domain use-case, ViewModel state (Turbine), one Compose smoke test ([TESTING_STRATEGY.md](TESTING_STRATEGY.md)).
 - [ ] Static checks pass (ktlint/detekt; architecture rules).

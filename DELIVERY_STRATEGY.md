@@ -10,7 +10,7 @@
 - Multi-module, feature-isolated Android foundation that builds and runs.
 - `mock` / `live` product flavors — the production seam, present from day one.
 - One **vertical slice** (recommended: Room Controls / Dashboard) end-to-end: domain → mock data → presentation → `:app` wiring, with believable time-varying mock state.
-- Demo-critical states (loading, success, empty, error) and a scripted demo path.
+- Demo-critical states (loading, content, error) and a scripted demo path.
 - Zero backend, zero real hardware.
 
 > Current status: foundation + flavor seam are in place; the first slice is the immediate next step (see [ASSESSMENT_ALIGNMENT.md](ASSESSMENT_ALIGNMENT.md)).

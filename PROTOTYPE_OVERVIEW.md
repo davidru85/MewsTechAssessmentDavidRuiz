@@ -1,7 +1,7 @@
 # Prototype Overview
 
 > What the Android prototype demonstrates, how mock data simulates real behaviour, and what is intentionally out of scope.
-> Honest current state: the build, modular foundation, and `mock`/`live` flavor seam exist today; the first product feature slice is the next step. See [ASSESSMENT_ALIGNMENT.md](ASSESSMENT_ALIGNMENT.md) for status.
+> Honest current state: the **Controls/Dashboard** slice is built end-to-end on mock data and runs on the `mock` flavor; other feature areas are documented, not coded. See [ASSESSMENT_ALIGNMENT.md](ASSESSMENT_ALIGNMENT.md) for status.
 
 ---
 
@@ -29,10 +29,9 @@ This is the 60–90 second path scripted in [DEMO_SCRIPT.md](DEMO_SCRIPT.md).
 
 | Screen | Purpose | State today |
 |---|---|---|
-| App placeholder ([AppRoot.kt](app/src/main/java/com/mews/guestroom/AppRoot.kt)) | Confirms the app builds, launches, themes correctly | ✅ Implemented |
-| **Dashboard** | Room state at a glance + quick energy modes | 🟡 Planned first slice |
-| **Climate control** | Thermostat set point / mode | 🟡 Planned |
-| **Lighting & blinds** | Per-device toggles | 🟡 Planned |
+| **Dashboard** ([DashboardScreen.kt](feature/controls/presentation/src/main/kotlin/com/mews/guestroom/feature/controls/presentation/DashboardScreen.kt)) | Room state at a glance: climate, scenes, lights, blinds | ✅ Implemented |
+| **Climate control** | Thermostat set point via slider (clamped 16–28°C) | ✅ Implemented (in Dashboard) |
+| **Lighting & blinds** | Per-device toggles + blind position | ✅ Implemented (in Dashboard) |
 | Access / keyless entry | Phone-as-key + audit log | ⬜ Future feature |
 | Services & chat | Front-desk requests, add-ons | ⬜ Future feature |
 
@@ -60,7 +59,7 @@ No persistence, network, PMS auth, BLE, or real hardware is required to run the 
 
 ## Demo-Critical States
 
-For a convincing demo, the prototype must show: **loading**, **success**, **empty**, **error**, and the **locked/unlocked** (or on/off) device states — all driven from mock data. These states are part of the first slice's acceptance.
+For a convincing demo, the prototype shows: **loading**, **content** (room state at a glance), an **error** snackbar (e.g. toggling the faulty Bathroom light), and **on/off** device states — all driven from mock data. There is no empty state: a hotel room always has controls.
 
 ---
 

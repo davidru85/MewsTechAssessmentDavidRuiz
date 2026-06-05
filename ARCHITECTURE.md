@@ -64,9 +64,9 @@ See [docs/architecture/04-mock-vs-live.md](docs/architecture/04-mock-vs-live.md)
 
 ---
 
-## Error / Loading / Empty States
+## Error / Loading / Content States
 
-Every screen's `UiState` models loading, content, empty, and error explicitly. `DataResult<T>` in `:core:common` carries success/failure from data → domain → ViewModel so failures are first-class, not exceptions that crash the demo.
+Every screen's `UiState` models loading and content explicitly, with errors surfaced as one-shot events (e.g. a snackbar). `DataResult<T>` in `:core:common` carries success/failure from data → domain → ViewModel so failures are first-class, not exceptions that crash the demo.
 
 ---
 

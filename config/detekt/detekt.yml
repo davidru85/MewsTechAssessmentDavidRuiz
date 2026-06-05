@@ -11,6 +11,9 @@ style:
   ReturnCount:
     active: true
     max: 3
+  UnusedPrivateMember:
+    # @Preview composables are entry points for tooling, not dead code.
+    ignoreAnnotated: ['Preview']
 
 complexity:
   LongMethod:

@@ -30,8 +30,8 @@
 
 ## Current Reality (keep in sync with [CONTEXT.md](CONTEXT.md))
 
-- Implemented: `:app`, `:core:common`, `:core:ui`. No feature module yet; app shows a placeholder.
-- Next slice: Room Controls / Dashboard (see [ROADMAP.md](ROADMAP.md)).
+- Implemented: `:app`, `:core:common`, `:core:ui`, and the `:feature:controls` slice (domain/data/presentation), wired into the app.
+- Next slice (Access or Services) chosen by validated priority (see [ROADMAP.md](ROADMAP.md)).
 
 ---
 
