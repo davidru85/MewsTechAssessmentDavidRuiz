@@ -19,9 +19,9 @@ Source of truth: [`Product_Builder_Mobile_Android_Take_Home_Task.md`](Product_Bu
 |---|---|
 | Build | ✅ Compiles and runs (`mockDebug`) |
 | Modules implemented | `:app`, `:core:common`, `:core:ui` |
-| Product features | ⬜ None implemented yet — app shows a placeholder ([AppRoot.kt](app/src/main/java/com/mews/guestroom/AppRoot.kt)) |
+| Product features | 🟢 Controls/Dashboard slice built (domain/data/presentation), wired into the app NavHost |
 | Flavors | `mock` / `live` defined ([app/build.gradle.kts](app/build.gradle.kts)) |
-| Next step | First vertical slice: Room Controls / Dashboard |
+| Next step | Rehearse demo; next slice (Access or Services) by validated priority |
 
 > Treat anything not listed as "implemented" as **documented but not built**. See [ASSESSMENT_ALIGNMENT.md](ASSESSMENT_ALIGNMENT.md).
 

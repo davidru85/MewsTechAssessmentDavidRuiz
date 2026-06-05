@@ -46,6 +46,7 @@ dependencies {
     implementation(libs.hilt.android)
     ksp(libs.hilt.compiler)
 
+    testImplementation(testFixtures(project(":feature:controls:domain")))
     testImplementation(libs.junit)
     testImplementation(libs.truth)
     testImplementation(libs.kotlinx.coroutines.test)

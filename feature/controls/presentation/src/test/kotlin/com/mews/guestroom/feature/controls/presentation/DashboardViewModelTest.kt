@@ -3,8 +3,10 @@ package com.mews.guestroom.feature.controls.presentation
 import app.cash.turbine.test
 import com.google.common.truth.Truth.assertThat
 import com.mews.guestroom.core.common.result.DataResult
+import com.mews.guestroom.feature.controls.domain.FakeControlsRepository
 import com.mews.guestroom.feature.controls.domain.model.BlindPosition
 import com.mews.guestroom.feature.controls.domain.model.ClimateMode
+import com.mews.guestroom.feature.controls.domain.sampleRoomControls
 import com.mews.guestroom.feature.controls.domain.usecase.ActivateEnergySceneUseCase
 import com.mews.guestroom.feature.controls.domain.usecase.ObserveRoomControlsUseCase
 import com.mews.guestroom.feature.controls.domain.usecase.SetBlindsUseCase

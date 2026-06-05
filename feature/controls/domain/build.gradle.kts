@@ -1,5 +1,6 @@
 plugins {
     alias(libs.plugins.kotlin.jvm)
+    `java-test-fixtures`
 }
 
 kotlin {
@@ -7,9 +8,12 @@ kotlin {
 }
 
 dependencies {
+    // coroutines + javax.inject are exposed transitively via :core:common's api.
     api(project(":core:common"))
-    api(libs.kotlinx.coroutines.core)
-    implementation(libs.javax.inject)
+
+    // Shared test double lives in test fixtures and is consumed by presentation too.
+    testFixturesImplementation(project(":core:common"))
+    testFixturesImplementation(libs.kotlinx.coroutines.core)
 
     testImplementation(libs.junit)
     testImplementation(libs.truth)

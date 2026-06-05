@@ -22,7 +22,7 @@
 
 - [ ] Core flow (Dashboard: thermostat, lights/blinds, energy mode) works on the `mock` flavor.
 - [ ] Mock state is believable and time-varying (e.g. temperature drift), not static.
-- [ ] Demo-critical states present: loading, success, empty, error.
+- [ ] Demo-critical states present: loading, content, error (transient message).
 - [ ] [DEMO_SCRIPT.md](DEMO_SCRIPT.md) rehearsed end-to-end within ~60–90s.
 
 ## 4. Tests

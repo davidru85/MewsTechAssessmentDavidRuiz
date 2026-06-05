@@ -73,7 +73,7 @@ Work **test-first** at every layer (red → green → refactor — see Golden Ru
 - Slice builds: `./gradlew :app:assembleMockDebug` (JDK 17).
 - Tests pass for the touched layers.
 - No cross-feature deps; `:feature:*:domain` has no Android imports.
-- Demo-critical states modelled (loading, success, empty, error).
+- Demo-critical states modelled (loading, content, and error events).
 - Docs reconciled with reality; relevant ADR added/updated.
 - Merged via a per-feature PR ([docs/development/branching-and-pull-requests.md](docs/development/branching-and-pull-requests.md)).
 

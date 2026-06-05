@@ -64,7 +64,7 @@ For the first slice (Controls / Dashboard):
 - **Use cases:** `ToggleLightUseCase`, `SetTemperatureUseCase`, `ActivateSleepModeUseCase` — assert the resulting domain state and `DataResult` success/failure.
 - **ViewModel:** initial state → loading → content; error path; one-shot events. Verify with Turbine on the `StateFlow`.
 - **Mock data source:** emits believable time-varying state; command applies latency then updates state.
-- **Compose smoke:** Dashboard renders; loading, success, empty, and error states are reachable.
+- **Compose smoke:** Dashboard renders; loading, content, and error (snackbar) states are reachable.
 
 ---
 
@@ -91,7 +91,7 @@ For the first slice (Controls / Dashboard):
 
 ## Demo-Critical Path Verification
 
-Before any demo, manually verify the scripted flow in [DEMO_SCRIPT.md](DEMO_SCRIPT.md) on the `mock` flavor, and confirm loading/success/empty/error states all appear. This is captured as a gate in [VALIDATION_CHECKLIST.md](VALIDATION_CHECKLIST.md).
+Before any demo, manually verify the scripted flow in [DEMO_SCRIPT.md](DEMO_SCRIPT.md) on the `mock` flavor, and confirm loading, content, and error states all appear. This is captured as a gate in [VALIDATION_CHECKLIST.md](VALIDATION_CHECKLIST.md).
 
 ---
 

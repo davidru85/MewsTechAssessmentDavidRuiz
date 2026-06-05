@@ -6,13 +6,15 @@
 
 ## Assessment-Critical Gaps (do before/with the demo)
 
-These are the only items needed to fully satisfy the assessment's prototype requirement:
+The prototype slice is built — these items are now complete:
 
-- [ ] Implement the first **vertical slice** (recommended: Room Controls / Dashboard) end-to-end: `:feature:controls:domain` → `:data` (mock) → `:presentation` → `:app` wiring.
-- [ ] Believable, time-varying `MockControlsDataSource` (latency + temperature drift).
-- [ ] Demo-critical states: loading, success, empty, error.
-- [ ] Tests for the slice: use-case (JUnit), ViewModel state (Turbine), one Compose smoke test.
-- [ ] Wire the Dashboard into the root `NavHost` (replace the placeholder in [AppRoot.kt](app/src/main/java/com/mews/guestroom/AppRoot.kt)).
+- [x] Implement the first **vertical slice** (Room Controls / Dashboard) end-to-end: `:feature:controls:domain` → `:data` (mock) → `:presentation` → `:app` wiring.
+- [x] Believable, time-varying `MockControlsDataSource` (latency + temperature drift + faulty/unknown-device errors).
+- [x] Demo-critical states: loading, content, error (empty intentionally dropped — a room always has controls).
+- [x] Tests for the slice: 18 JVM unit tests (use-case, MockDataSource, ViewModel via Turbine). Compose smoke test deferred (needs emulator/Robolectric).
+- [x] Wire the Dashboard into the root `NavHost` (placeholder replaced).
+
+Remaining before the live session: rehearse [DEMO_SCRIPT.md](DEMO_SCRIPT.md).
 
 ---
 
@@ -33,6 +35,9 @@ These are the only items needed to fully satisfy the assessment's prototype requ
 - [x] Static-analysis CI gates: ktlint + detekt on all modules, plus an architecture check (`scripts/check-architecture.sh`) that rejects Android/Hilt imports in `:feature:*:domain` and cross-feature imports. See [CI_CD.md](CI_CD.md).
 - [ ] Instrumented/Compose UI tests + coverage reporting in CI (needs first feature slice / emulator).
 - [ ] Visual regression (Paparazzi/Roborazzi) and a `:core:testing` module.
+- [ ] **Mock/live by product flavor** in `:feature:controls:data` (P1.2): mock is bound in `main` today; a `live` source set + binding land in Phase 2 when a real data source exists.
+- [ ] Replace the grep-based architecture guard with a Gradle module-dependency rule (Konsist / module-graph); `scripts/check-architecture.sh` is a cheap pre-check only.
+- [ ] Scope detekt `MagicNumber` to presentation / `:core:ui` rather than disabling it repo-wide.
 
 ---
 

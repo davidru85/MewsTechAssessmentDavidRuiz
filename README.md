@@ -22,7 +22,7 @@ Hotel rooms frustrate guests (confusing HVAC/lighting, key-card-in-slot power wa
 - **Mock data only**, no backend — `mock` / `live` product flavors make the production seam real from day one.
 - Core flow: a **Room Dashboard** with thermostat, lights/blinds, and one-tap Smart Energy Modes, driven by believable time-varying mock state.
 
-**Current status (honest):** the build, modular foundation (`:app`, `:core:common`, `:core:ui`), and `mock`/`live` flavors exist and run; the app shows an intentional placeholder. The first product feature slice is the next step. See [PROTOTYPE_OVERVIEW.md](PROTOTYPE_OVERVIEW.md) and [ASSESSMENT_ALIGNMENT.md](ASSESSMENT_ALIGNMENT.md).
+**Current status (honest):** the modular foundation plus the **Controls/Dashboard** feature slice (domain/data/presentation) are built and run on the `mock` flavor — thermostat, lights, blinds, and one-tap energy scenes over believable mock data. Other feature areas are documented, not coded. See [PROTOTYPE_OVERVIEW.md](PROTOTYPE_OVERVIEW.md) and [ASSESSMENT_ALIGNMENT.md](ASSESSMENT_ALIGNMENT.md).
 
 ---
 

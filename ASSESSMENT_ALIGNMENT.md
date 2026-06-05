@@ -20,9 +20,9 @@ Take a loosely defined hospitality problem and turn it into a **validated, proto
 | 1 | Identify a hospitality problem | ✅ Done | [PRODUCT_DISCOVERY.md](PRODUCT_DISCOVERY.md), [Smart-Guest-Room-Management.md](Smart-Guest-Room-Management.md), [spec-01](specifications/spec-01-problem-statement.md) |
 | 2 | Define who experiences it and why it matters | ✅ Done | [PRODUCT_DISCOVERY.md](PRODUCT_DISCOVERY.md) (personas), [spec-01](specifications/spec-01-problem-statement.md) |
 | 3 | Explain discovery and validation | ✅ Done | [PRODUCT_DISCOVERY.md](PRODUCT_DISCOVERY.md), [spec-02](specifications/spec-02-discovery-validation.md) |
-| 4 | Prototype the solution as a Kotlin Android app | 🟡 Scaffold + architecture in place; first feature slice pending | [ARCHITECTURE.md](ARCHITECTURE.md), [PROTOTYPE_OVERVIEW.md](PROTOTYPE_OVERVIEW.md), `app/`, `core/` |
+| 4 | Prototype the solution as a Kotlin Android app | ✅ Controls/Dashboard slice built end-to-end (domain/data/presentation) | [ARCHITECTURE.md](ARCHITECTURE.md), [PROTOTYPE_OVERVIEW.md](PROTOTYPE_OVERVIEW.md), `feature/controls/`, `app/` |
 | 5 | Use mock data, no backend required | ✅ Designed; `mock`/`live` build flavors exist | [app/build.gradle.kts](app/build.gradle.kts), [docs/architecture/04-mock-vs-live.md](docs/architecture/04-mock-vs-live.md) |
-| 6 | Showcase the core user flow on device/emulator | 🟡 Core flow defined; placeholder app runs today | [PROTOTYPE_OVERVIEW.md](PROTOTYPE_OVERVIEW.md), [DEMO_SCRIPT.md](DEMO_SCRIPT.md) |
+| 6 | Showcase the core user flow on device/emulator | ✅ Room Dashboard runs on the `mock` flavor (`:app:installMockDebug`) | [PROTOTYPE_OVERVIEW.md](PROTOTYPE_OVERVIEW.md), [DEMO_SCRIPT.md](DEMO_SCRIPT.md) |
 | 7 | Explain AI-assisted development | ✅ Done | [AI_DEVELOPMENT.md](AI_DEVELOPMENT.md), [spec-08](specifications/spec-08-ai-first-development.md) |
 | 8 | Explain MVP and delivery strategy | ✅ Done | [DELIVERY_STRATEGY.md](DELIVERY_STRATEGY.md), [spec-05](specifications/spec-05-delivery-strategy.md) |
 | 9 | Explain adoption strategy and metrics | ✅ Done | [ADOPTION_METRICS.md](ADOPTION_METRICS.md), [spec-06](specifications/spec-06-adoption-metrics.md) |
@@ -39,7 +39,7 @@ Legend: ✅ complete · 🟡 in progress / partially built · ⬜ not started.
 - Multi-module Gradle build: `:app`, `:core:common`, `:core:ui`.
 - `mock` / `live` product flavors wired in [app/build.gradle.kts](app/build.gradle.kts) — the prototype/production seam is real at the build level.
 - `:core:common` technical utilities (`DataResult`, dispatcher qualifiers); `:core:ui` for theme/tokens.
-- A running placeholder screen ([AppRoot.kt](app/src/main/java/com/mews/guestroom/AppRoot.kt)) that compiles and launches.
+- A working **Room Dashboard** ([DashboardScreen.kt](feature/controls/presentation/src/main/kotlin/com/mews/guestroom/feature/controls/presentation/DashboardScreen.kt)) wired into the app NavHost, driven by `MockControlsDataSource` (loading, command latency, temperature drift, error path) — 18 unit tests green.
 
 **In documentation:**
 - Full product thinking (problem, discovery, adoption, delivery) across the root docs and `specifications/`.
@@ -50,9 +50,9 @@ Legend: ✅ complete · 🟡 in progress / partially built · ⬜ not started.
 
 ## Known Gaps (honest)
 
-- **No product feature module is implemented yet.** The first vertical slice (recommended: Room Controls / Dashboard) is scaffolded by convention but not coded. The app currently shows an intentional placeholder.
-- **The live data sources do not exist** — only the mock side is planned for the prototype. This is by design (assessment requires no backend).
-- **Tests** are described in the testing strategy but the demo-critical tests land with the first feature slice.
+- **One feature slice is built (Controls/Dashboard).** Remaining product areas (Access, Services, Notifications, Profile) are documented, not coded — by design for the prototype.
+- **The live data sources do not exist** — only the mock side is built; binding mock/live by product flavor is a Phase-2 item ([ROADMAP.md](ROADMAP.md)). This is by design (assessment requires no backend).
+- **No instrumented/Compose UI tests** run in CI yet (no emulator); behaviour is covered by 18 JVM unit tests across the slice.
 
 These gaps are scoped intentionally: the assessment values a validated problem, clear product strategy, and a credible Android foundation over a broad-but-shallow feature set. The roadmap is in [TODO.md](TODO.md).
 
