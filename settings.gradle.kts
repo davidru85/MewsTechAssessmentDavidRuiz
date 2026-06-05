@@ -22,3 +22,7 @@ include(":app")
 
 include(":core:common")
 include(":core:ui")
+
+include(":feature:controls:domain")
+include(":feature:controls:data")
+include(":feature:controls:presentation")

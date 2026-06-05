@@ -58,6 +58,15 @@
 
 ---
 
+## Testing (TDD is compulsory)
+
+- **All new behaviour is written test-first** following the mandatory [TDD Protocol](TESTING_STRATEGY.md#the-tdd-protocol-mandatory): red → green → refactor, where each phase is code → **owner manual-review gate** → integrate (Red commits, Green commits+pushes, Refactor commits+pushes+opens a PR). The agent stops at every review gate. Production logic is never authored before a failing test.
+- Applies to use cases, repositories/data sources, ViewModels, and any branching/state logic. Compose UI, navigation, and DI are the documented pragmatic exceptions (built alongside, justified in the PR).
+- Use `runTest` + injected/test dispatchers (never real `Dispatchers`); fakes over mocks for things you own; one behaviour per test, named `methodOrIntent_condition_expectedResult`.
+- Where practical, commit the failing test before the code that makes it pass, so TDD is visible in history.
+
+---
+
 ## Git & PRs
 
 - One branch per unit of work: `feature/<name>`, `fix/<scope>`, `docs/<scope>`, `chore/<scope>`.

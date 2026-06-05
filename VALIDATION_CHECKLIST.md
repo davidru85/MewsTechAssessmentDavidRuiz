@@ -27,6 +27,7 @@
 
 ## 4. Tests
 
+- [ ] **TDD Protocol followed** — new behaviour written test-first (red → green → refactor), each phase passing the owner's manual-review gate before commit / push / PR; compulsory per [TESTING_STRATEGY.md](TESTING_STRATEGY.md#the-tdd-protocol-mandatory).
 - [ ] Unit tests pass: `./gradlew test`.
 - [ ] First slice covered: domain use-case, ViewModel state (Turbine), one Compose smoke test ([TESTING_STRATEGY.md](TESTING_STRATEGY.md)).
 - [ ] Static checks pass (ktlint/detekt; architecture rules).

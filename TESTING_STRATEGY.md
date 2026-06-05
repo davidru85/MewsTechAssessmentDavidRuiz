@@ -11,6 +11,39 @@ Test what carries risk for *this* deliverable: the business logic, the ViewModel
 
 ---
 
+## Test-Driven Development (mandatory)
+
+**All new behaviour is written test-first, following red → green → refactor.** This is a hard guardrail, not a preference — production logic must not be authored before a failing test that specifies it.
+
+### The TDD Protocol (mandatory)
+
+Every phase has **exactly three sub-phases**, and **sub-phase 2 of every phase is a mandatory manual review by the project owner**. The agent must **STOP at each review gate** and must never self-approve, commit, push, or open a PR without that review.
+
+| Phase | Sub-phase 1 — Code | Sub-phase 2 — Manual review ⛔ (project owner) | Sub-phase 3 — Integrate |
+|---|---|---|---|
+| 🔴 **Red** | Write the failing test; run it and confirm it fails for the **right reason** (missing code / unmet assertion — not a typo or config error) | Owner reviews the failing test | **Commit** the failing test |
+| 🟢 **Green** | Write the **minimum** production code to pass; run the test and the module suite green | Owner reviews the implementation | **Commit and push** |
+| 🔵 **Refactor** | Improve names/structure/duplication in production *and* test code under green; **no new behaviour**; re-run `ktlintCheck detekt test` | Owner reviews the refactor | **Commit, push, and open a pull request** |
+
+**Hard rules:**
+
+1. **Stop at every sub-phase 2.** The agent pauses and waits for the owner's explicit approval before doing sub-phase 3. No exceptions.
+2. **No integration without review.** Nothing is committed (Red), pushed (Green), or turned into a PR (Refactor) until the owner has reviewed that phase.
+3. **One behaviour per cycle**, then loop back to Red for the next.
+4. If a review returns changes, redo sub-phase 1 of that phase and re-submit for review.
+
+**Craft notes for sub-phase 1 (Code):** pick the next smallest behaviour (one rule/branch/state transition); arrange with fakes/`TestScope`; assert exactly one behaviour named `methodOrIntent_condition_expectedResult`; in Green write no speculative branches; in Refactor preserve behaviour (the green suite is the safety net).
+
+Scope of the rule:
+
+- **Applies to** use cases, repositories/data sources, ViewModels, and any logic with branching/state. These are unit-testable on the JVM and run in CI.
+- **Pragmatic exceptions** (write alongside, not strictly test-first): Compose UI, navigation wiring, DI modules, and pure data/config — they are validated by build + demo + (future) instrumented tests rather than JVM unit tests. State *why* in the PR when an exception is taken.
+- **TDD ordering shows in the commit history** where practical: a commit with the failing test, then a commit making it pass.
+
+If you ever find yourself writing logic before its test, stop, revert or comment it out, and write the test first.
+
+---
+
 ## The Test Pyramid (here)
 
 | Layer | What | Tools | Priority |

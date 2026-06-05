@@ -60,6 +60,11 @@ A feature PR is mergeable only when:
 
 - [ ] The slice is complete end-to-end (domain, data incl. mock data source,
       presentation, and `:app` wiring).
+- [ ] **Behaviour was developed test-first** under the mandatory
+      [TDD Protocol](../../TESTING_STRATEGY.md#the-tdd-protocol-mandatory)
+      (red → green → refactor, each phase gated by the owner's manual review
+      before commit / push / PR). The PR itself is opened only at Refactor
+      sub-phase 3, after review.
 - [ ] `./gradlew :app:assembleMockDebug` succeeds (JDK 17 — see project memory).
 - [ ] Unit tests pass for the feature's domain, data, and presentation layers
       (per [blueprint §8](../../project-structure-blueprint.md)).
