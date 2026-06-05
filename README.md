@@ -43,7 +43,7 @@ Hotel rooms frustrate guests (confusing HVAC/lighting, key-card-in-slot power wa
 
 ## How to Run
 
-> Requires **JDK 17** (Gradle 8.9 fails on JDK 25; use `openjdk@17`).
+> Requires **JDK 17** (the build targets Java 17; the machine-default JDK 25 is wrong — use `openjdk@17`). Gradle wrapper 9.5.1.
 
 ```bash
 # Build the mock flavor
