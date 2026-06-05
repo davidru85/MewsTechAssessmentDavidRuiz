@@ -100,6 +100,7 @@ Feature modules own their own `domain`, `data`, and `presentation`; shared `core
 | [TODO.md](TODO.md) | Out-of-scope future work |
 | [VALIDATION_CHECKLIST.md](VALIDATION_CHECKLIST.md) | Pre-submission / pre-demo gate |
 | [TESTING_STRATEGY.md](TESTING_STRATEGY.md) | Test pyramid and per-slice coverage |
+| [CI_CD.md](CI_CD.md) | CI strategy and future production CD path |
 | [CONVENTIONS.md](CONVENTIONS.md) | Coding, naming, and process conventions |
 | [GLOSSARY.md](GLOSSARY.md) | Domain, technical, and product vocabulary |
 | [AGENTS.md](AGENTS.md) | Operating guide for AI/human contributors |
