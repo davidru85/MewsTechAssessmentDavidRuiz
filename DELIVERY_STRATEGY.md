@@ -13,7 +13,7 @@
 - Demo-critical states (loading, content, error) and a scripted demo path.
 - Zero backend, zero real hardware.
 
-> Current status: foundation + flavor seam are in place; the first slice is the immediate next step (see [ASSESSMENT_ALIGNMENT.md](ASSESSMENT_ALIGNMENT.md)).
+> Current status: foundation + flavor seam + the Controls/Dashboard slice are in place; the immediate next step is demo rehearsal and presentation delivery (see [ASSESSMENT_ALIGNMENT.md](ASSESSMENT_ALIGNMENT.md)).
 
 ---
 
@@ -88,7 +88,7 @@ Feature-by-feature, per [docs/prototype-to-production.md](docs/prototype-to-prod
 ## Suggested Delivery Phases
 
 1. **Phase 0 — Foundation** *(done)*: modules, flavors, theme, CI-able build.
-2. **Phase 1 — Prototype slice**: Dashboard/Controls end-to-end on mock data + demo.
+2. **Phase 1 — Prototype slice** *(done)*: Dashboard/Controls end-to-end on mock data + demo.
 3. **Phase 2 — MVP pilot**: one live feature in ~10 pilot rooms, telemetry, A/B vs. control.
 4. **Phase 3 — Expand**: add features by validated priority; introduce `api/impl` only where a stable public contract is needed.
 5. **Phase 4 — Harden & scale**: offline, observability, multi-property rollout, security review.

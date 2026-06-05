@@ -30,14 +30,14 @@
 ## Examples of AI-Assisted Tasks (in this repo)
 
 - The feature vertical-slice template in [project-structure-blueprint.md](project-structure-blueprint.md) and the ADRs in [docs/decisions/](docs/decisions/) were drafted with AI and reviewed for consistency.
-- This documentation suite was generated from the `specifications/` source material and **reconciled against the actual code** (`:app`, `:core:common`, `:core:ui`, the `mock`/`live` flavors) so it states honest status, not aspiration.
+- This documentation suite was generated from the `specifications/` source material and **reconciled against the actual code** (`:app`, `:core:common`, `:core:ui`, `:feature:controls:*`, the `mock`/`live` flavors) so it states honest status, not aspiration.
 
 ---
 
 ## Human Validation and Corrections
 
 - Every architectural decision was made by the engineer; AI proposed options, the engineer chose ([docs/decisions/](docs/decisions/)).
-- Docs were checked against repository reality — e.g. recording that **no feature module is implemented yet** rather than claiming finished screens.
+- Docs were checked against repository reality — e.g. recording that **Controls/Dashboard is implemented** while Access, Services, Notifications, and Profile remain documented future slices.
 - AI-generated code passes the same lint / test / review pipeline as hand-written code.
 
 ---
