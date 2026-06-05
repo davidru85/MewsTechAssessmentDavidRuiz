@@ -30,7 +30,8 @@ These are the only items needed to fully satisfy the assessment's prototype requ
 - [ ] Live data sources per feature (MQTT/BLE/PMS) behind existing domain contracts.
 - [ ] Persistence layer (only when a feature genuinely needs it).
 - [ ] Convention plugins in `build-logic/` to dedupe module Gradle config.
-- [ ] Static-analysis CI gates: reject Android imports in `:feature:*:domain`, reject cross-feature deps (ktlint/detekt).
+- [x] Static-analysis CI gates: ktlint + detekt on all modules, plus an architecture check (`scripts/check-architecture.sh`) that rejects Android/Hilt imports in `:feature:*:domain` and cross-feature imports. See [CI_CD.md](CI_CD.md).
+- [ ] Instrumented/Compose UI tests + coverage reporting in CI (needs first feature slice / emulator).
 - [ ] Visual regression (Paparazzi/Roborazzi) and a `:core:testing` module.
 
 ---

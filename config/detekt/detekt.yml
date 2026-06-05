@@ -1,0 +1,31 @@
+# Detekt configuration — built upon the default config (buildUponDefaultConfig).
+# Only overrides are listed here; everything else inherits detekt defaults.
+# Keep this lightweight and prototype-appropriate; tighten as the codebase grows.
+
+build:
+  maxIssues: 0 # fail the build on any reported issue
+
+style:
+  MagicNumber:
+    active: false # too noisy for Compose UI dimensions at prototype stage
+  ReturnCount:
+    active: true
+    max: 3
+
+complexity:
+  LongMethod:
+    active: true
+  TooManyFunctions:
+    # Compose files legitimately group many small @Composable functions.
+    active: false
+
+naming:
+  FunctionNaming:
+    # Allow PascalCase @Composable function names (Compose convention).
+    functionPattern: '[a-zA-Z][a-zA-Z0-9]*'
+    ignoreAnnotated: ['Composable']
+  MatchingDeclarationName:
+    # Allow grouping related declarations (e.g. dispatcher qualifiers) in a
+    # file whose name does not match a single declaration. Mirrors the ktlint
+    # `filename` rule being disabled in .editorconfig.
+    active: false

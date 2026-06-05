@@ -1,8 +1,9 @@
 name: CI
 
 # Assessment-appropriate continuous integration: keep `main` always buildable
-# and demoable by verifying every pull request (and every push to main) builds
-# the mock flavor and passes unit tests on JDK 17.
+# and demoable. Every pull request (and every push to main) must pass the
+# architecture guardrails, static analysis (ktlint + detekt), build the mock
+# flavor, and pass unit tests on JDK 17.
 # See CI_CD.md for the strategy and the future production CD path.
 
 on:
@@ -25,17 +26,25 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
-        uses: actions/checkout@v4
+        uses: actions/checkout@v6
 
-      # JDK 17 is required — Gradle 8.9 fails on newer JDKs (see MEMORY.md).
+      # Fast, JDK-free guardrail: domain purity + no cross-feature imports.
+      # No-op until the first feature module exists, then auto-activates.
+      - name: Architecture rules
+        run: ./scripts/check-architecture.sh
+
+      # JDK 17 is pinned for build reproducibility (see MEMORY.md / CI_CD.md).
       - name: Set up JDK 17
-        uses: actions/setup-java@v4
+        uses: actions/setup-java@v5
         with:
           distribution: temurin
           java-version: "17"
 
       - name: Set up Gradle
-        uses: gradle/actions/setup-gradle@v4
+        uses: gradle/actions/setup-gradle@v6
+
+      - name: Static analysis (ktlint + detekt)
+        run: ./gradlew ktlintCheck detekt --stacktrace
 
       - name: Build mock flavor
         run: ./gradlew :app:assembleMockDebug --stacktrace
@@ -43,11 +52,14 @@ jobs:
       - name: Run unit tests
         run: ./gradlew test --stacktrace
 
-      - name: Upload test reports
+      - name: Upload reports
         if: always()
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v7
         with:
-          name: test-reports
-          path: "**/build/reports/tests/"
+          name: build-reports
+          path: |
+            **/build/reports/tests/
+            **/build/reports/ktlint/
+            **/build/reports/detekt/
           if-no-files-found: ignore
           retention-days: 7

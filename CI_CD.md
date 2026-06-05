@@ -17,19 +17,34 @@ Implemented in [.github/workflows/ci.yml](.github/workflows/ci.yml):
 
 | Step | Command | Why |
 |---|---|---|
-| Set up JDK 17 | Temurin 17 | Gradle 8.9 fails on newer JDKs (see [MEMORY.md](MEMORY.md)) |
+| Architecture rules | `./scripts/check-architecture.sh` | Domain purity (no Android/Hilt imports in `:feature:*:domain`) + no cross-feature imports. No-op until feature modules exist, then auto-activates |
+| Set up JDK 17 | Temurin 17 | Pinned for build reproducibility (see [MEMORY.md](MEMORY.md)) |
+| Static analysis | `./gradlew ktlintCheck detekt` | Enforces style + code smells across every module |
 | Build | `./gradlew :app:assembleMockDebug` | Proves the app compiles from a clean checkout |
 | Unit tests | `./gradlew test` | Domain/use-case, ViewModel, and data tests ([TESTING_STRATEGY.md](TESTING_STRATEGY.md)) |
-| Test reports | upload-artifact | Surfaces failures for review |
+| Reports | upload-artifact | Surfaces test/ktlint/detekt reports for review |
 
-**Triggers:** `pull_request` → `main` and `push` → `main`. Superseded runs on the same ref are cancelled to save CI minutes.
+All steps run inside the required **Build & Test (mock, JDK 17)** check, so any failure blocks merge.
+
+**Triggers:** `pull_request` → `main` and `push` → `main`. Superseded runs on the same ref are cancelled to save CI minutes. Gradle build cache + parallel execution are enabled ([gradle.properties](gradle.properties)) and the Gradle user home is cached by `gradle/actions/setup-gradle`.
+
+### Tooling
+
+- **ktlint** via `org.jlleitschuh.gradle.ktlint`, configured Compose-friendly in [.editorconfig](.editorconfig) (PascalCase `@Composable`, relaxed `filename`).
+- **detekt** via `io.gitlab.arturbosch.detekt`, config in [config/detekt/detekt.yml](config/detekt/detekt.yml) (`buildUponDefaultConfig`).
+- Both applied to all modules from the root build's `subprojects { }` block.
+- Action versions track current majors (checkout v6, setup-java v5, upload-artifact v7, setup-gradle v6) to run on Node 24.
 
 ---
 
-## Gates
+## Gates (active on `main`)
 
+Branch protection is configured on `main`:
+
+- **Required status check:** `Build & Test (mock, JDK 17)` must pass before merge.
+- **Pull request required** — no direct pushes to `main` (enforced for admins too).
+- **Squash-only merges** with linear history.
 - A PR is mergeable only when CI is green **and** the [Definition of Done](AGENTS.md) is met.
-- Recommended (configure in GitHub repo settings): mark **Build & Test (mock, JDK 17)** as a **required status check** on `main`, and require PRs before merging. This enforces the "nothing committed directly to `main`" rule from the branching strategy.
 
 ---
 
@@ -37,9 +52,10 @@ Implemented in [.github/workflows/ci.yml](.github/workflows/ci.yml):
 
 Kept out to avoid false-red builds and over-engineering the prototype:
 
-- **Static analysis (ktlint/detekt)** + architecture-rule checks (no Android imports in `:feature:*:domain`, no cross-feature deps) — these tools are not yet configured in the version catalog. Tracked in [TODO.md](TODO.md); add the step the same day the tooling lands.
 - **Instrumented/Compose UI tests** — require an emulator on CI; add once the first feature slice exists.
 - **Coverage gates** — explicitly out of scope for the assessment ([TESTING_STRATEGY.md](TESTING_STRATEGY.md)).
+
+A manual-only CD scaffold exists at [.github/workflows/release.yml](.github/workflows/release.yml) (`workflow_dispatch`); it documents the signed-release → internal-track flow and stays inert until signing secrets and a `live` slice exist.
 
 ---
 
