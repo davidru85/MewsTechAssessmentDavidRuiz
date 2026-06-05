@@ -13,6 +13,15 @@ android {
         minSdk = 26
     }
 
+    // Mirrors the app's `dataSource` dimension so Gradle variant-matching wires the
+    // matching source set (mock/live) into each app flavor. This is the production
+    // seam: the bound ControlsDataSource is chosen by flavor, not by code change.
+    flavorDimensions += "dataSource"
+    productFlavors {
+        create("mock") { dimension = "dataSource" }
+        create("live") { dimension = "dataSource" }
+    }
+
     compileOptions {
         sourceCompatibility = JavaVersion.VERSION_17
         targetCompatibility = JavaVersion.VERSION_17
