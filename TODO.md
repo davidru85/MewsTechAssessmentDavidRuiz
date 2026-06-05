@@ -24,6 +24,8 @@ Remaining before the live session: rehearse [DEMO_SCRIPT.md](DEMO_SCRIPT.md).
 - [ ] Smart Energy Modes beyond Sleep (Away, Welcome, Wake-up) with manual override + auto-revert.
 - [ ] Multi-language (i18n) and richer accessibility settings.
 - [ ] In-app nudges and feature-discovery coaching.
+- [ ] **Dashboard a11y pass** (from code review): merge each `LightsCard` row into a single `Role.Switch` click target (one TalkBack swipe per light), and attach a polite `liveRegion` to the busy indicator so command start/finish is announced.
+- [ ] **Explicit `Disconnected` dashboard state** (live-flavor option 2): replace the live stub's neutral snapshot with a first-class `DashboardUiState.Disconnected` rendered as a clear "not connected" screen, once the live hub work begins.
 
 ---
 
@@ -34,8 +36,9 @@ Remaining before the live session: rehearse [DEMO_SCRIPT.md](DEMO_SCRIPT.md).
 - [ ] Convention plugins in `build-logic/` to dedupe module Gradle config.
 - [x] Static-analysis CI gates: ktlint + detekt on all modules, plus an architecture check (`scripts/check-architecture.sh`) that rejects Android/Hilt imports in `:feature:*:domain` and cross-feature imports. See [CI_CD.md](CI_CD.md).
 - [ ] Instrumented/Compose UI tests + coverage reporting in CI (needs first feature slice / emulator).
+- [ ] **Debounce the Climate slider** (from code review): hold local drag state in `ClimateCard` and dispatch `onTargetTemperatureChange` only on `onValueChangeFinished`, so a drag no longer spawns one command (350 ms each) per frame.
 - [ ] Visual regression (Paparazzi/Roborazzi) and a `:core:testing` module.
-- [ ] **Mock/live by product flavor** in `:feature:controls:data` (P1.2): mock is bound in `main` today; a `live` source set + binding land in Phase 2 when a real data source exists.
+- [x] **Mock/live by product flavor** in `:feature:controls:data` (P1.2): the `dataSource` flavor dimension now binds `MockControlsDataSource` (`src/mock`) vs. `LiveControlsDataSource` (`src/live`) via flavor-specific Hilt modules — the bound source is chosen by build flavor with 0 changes outside the feature. The live source is an honest stub (neutral disconnected snapshot + `NOT_CONNECTED` command errors) until the real hub lands.
 - [ ] Replace the grep-based architecture guard with a Gradle module-dependency rule (Konsist / module-graph); `scripts/check-architecture.sh` is a cheap pre-check only.
 - [ ] Scope detekt `MagicNumber` to presentation / `:core:ui` rather than disabling it repo-wide.
 
