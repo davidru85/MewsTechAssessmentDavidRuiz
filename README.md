@@ -30,3 +30,7 @@ Architecture references:
 - [Delivery strategy](specifications/spec-05-delivery-strategy.md)
 - [Feature-isolated architecture notes](docs/architecture/01-feature-isolated-clean-architecture.md)
 
+Process references:
+
+- [Branching & pull request strategy](docs/development/branching-and-pull-requests.md)
+
