@@ -32,9 +32,11 @@ One feature end-to-end on mock data — the demo deliverable.
 - ✅ Replaced placeholder; wired Dashboard into the root `NavHost`.
 - ✅ Demo-critical states: loading, content, and error (transient message). Empty intentionally dropped — a room always has controls.
 - ✅ Tests: 18 JVM unit tests (use-case, MockDataSource, ViewModel via Turbine), all green. Compose smoke test deferred (needs emulator/Robolectric).
-- ⬜ Rehearse [DEMO_SCRIPT.md](DEMO_SCRIPT.md).
+- ✅ Mock/live flavor seam made real (P1.2, PR #5) + Climate slider debounce (PR #6).
+- ✅ Demo flow **verified on emulator** (Pixel_9a, `mockDebug`, 2026-06-05): content, temperature drift, error snackbar (faulty Bathroom light), and Sleep-scene orchestration all render with no crashes/ANRs.
+- ⬜ **Presenter steps (human):** time the live walkthrough to 60–90s and send the presentation one day before the session.
 
-**Exit criteria:** scripted 60–90s demo runs on the `mock` flavor without crashes; [VALIDATION_CHECKLIST.md](VALIDATION_CHECKLIST.md) green.
+**Exit criteria:** scripted demo runs on the `mock` flavor without crashes ✅ (verified); [VALIDATION_CHECKLIST.md](VALIDATION_CHECKLIST.md) green except the presenter-only items (live rehearsal timing, presentation sent) and the deferred Compose smoke test.
 
 ---
 
