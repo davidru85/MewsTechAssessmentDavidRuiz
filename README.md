@@ -24,6 +24,8 @@ Hotel rooms frustrate guests (confusing HVAC/lighting, key-card-in-slot power wa
 
 **Current status (honest):** the modular foundation plus the **Controls/Dashboard** feature slice (domain/data/presentation) are built and run on the `mock` flavor — thermostat, lights, blinds, and one-tap energy scenes over believable mock data. Other feature areas are documented, not coded. See [PROTOTYPE_OVERVIEW.md](PROTOTYPE_OVERVIEW.md) and [ASSESSMENT_ALIGNMENT.md](ASSESSMENT_ALIGNMENT.md).
 
+**UI design source of truth:** [DESIGN.md](DESIGN.md) is the canonical spec for the UI. Edit it to drive UI changes — the implementation follows it.
+
 ---
 
 ## Tech Stack

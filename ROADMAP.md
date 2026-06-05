@@ -68,4 +68,4 @@ Offline/degraded modes, observability, multi-property rollout, security review (
 
 ## Immediate Next Action
 
-Implement the **Phase 1 Controls/Dashboard slice** — the only item standing between the current build and a complete assessment prototype.
+Rehearse the [DEMO_SCRIPT.md](DEMO_SCRIPT.md) and prepare the presentation deck (Miro/PDF) to be sent one day prior to the session, then proceed to plan the Phase 2 MVP Pilot.

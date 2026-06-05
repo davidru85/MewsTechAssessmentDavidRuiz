@@ -25,6 +25,8 @@ This is the 60–90 second path scripted in [DEMO_SCRIPT.md](DEMO_SCRIPT.md).
 
 ---
 
+> UI design is specified in [DESIGN.md](DESIGN.md) — the canonical source of truth for theme, layout, components, and the design iteration backlog.
+
 ## Screen Inventory
 
 | Screen | Purpose | State today |
