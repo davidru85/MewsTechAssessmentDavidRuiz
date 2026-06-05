@@ -57,6 +57,15 @@ class MockControlsDataSourceTest {
     }
 
     @Test
+    fun toggleLight_unknownId_returnsError() = runTest {
+        val dataSource = MockControlsDataSource(backgroundScope)
+
+        val result = dataSource.toggleLight("does-not-exist")
+
+        assertThat(result).isInstanceOf(DataResult.Error::class.java)
+    }
+
+    @Test
     fun activateScene_sleep_setsTargetTurnsLightsOffAndClosesBlinds() = runTest {
         val dataSource = MockControlsDataSource(backgroundScope)
 

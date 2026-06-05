@@ -8,6 +8,7 @@ import com.mews.guestroom.feature.controls.domain.model.EnergyScene
 import com.mews.guestroom.feature.controls.domain.model.LightControl
 import com.mews.guestroom.feature.controls.domain.model.RoomControls
 import com.mews.guestroom.feature.controls.domain.repository.ControlsRepository
+import kotlinx.coroutines.CompletableDeferred
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
 
@@ -25,25 +26,48 @@ class FakeControlsRepository(
 
     var nextResult: DataResult<Unit> = DataResult.Success(Unit)
 
+    /** When true, each command suspends on a per-call gate until [completeCommand] releases it. */
+    var gateCommands: Boolean = false
+
+    /** When true, the next command throws instead of returning a result. */
+    var throwOnCommand: Boolean = false
+
+    private val gates = mutableListOf<CompletableDeferred<Unit>>()
+
     override val controls: Flow<RoomControls> = state
 
     override suspend fun setTargetTemperature(celsius: Int): DataResult<Unit> {
         lastTargetCelsius = celsius
-        return nextResult
+        return result()
     }
 
     override suspend fun toggleLight(id: String): DataResult<Unit> {
         lastToggledLightId = id
-        return nextResult
+        return result()
     }
 
     override suspend fun setBlinds(position: BlindPosition): DataResult<Unit> {
         lastBlinds = position
-        return nextResult
+        return result()
     }
 
     override suspend fun activateScene(scene: EnergyScene): DataResult<Unit> {
         lastScene = scene
+        return result()
+    }
+
+    /** Releases the n-th in-flight gated command. */
+    fun completeCommand(index: Int) {
+        gates[index].complete(Unit)
+    }
+
+    private suspend fun result(): DataResult<Unit> {
+        if (throwOnCommand) error("Simulated command failure")
+        if (gateCommands) {
+            val gate = CompletableDeferred<Unit>()
+            gates += gate
+            gate.await()
+        }
         return nextResult
     }
 }
