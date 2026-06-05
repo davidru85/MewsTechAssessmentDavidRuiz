@@ -19,7 +19,8 @@ fun AppRoot() {
         color = MaterialTheme.colorScheme.background,
     ) {
         Column(
-            modifier = Modifier
+            modifier =
+            Modifier
                 .fillMaxSize()
                 .padding(24.dp),
             horizontalAlignment = Alignment.CenterHorizontally,
@@ -37,4 +38,3 @@ fun AppRoot() {
         }
     }
 }
-
