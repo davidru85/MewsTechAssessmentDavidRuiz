@@ -4,10 +4,12 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.mews.guestroom.core.common.result.DataResult
 import com.mews.guestroom.feature.controls.domain.model.BlindPosition
+import com.mews.guestroom.feature.controls.domain.model.ClimateMode
 import com.mews.guestroom.feature.controls.domain.model.EnergyScene
 import com.mews.guestroom.feature.controls.domain.usecase.ActivateEnergySceneUseCase
 import com.mews.guestroom.feature.controls.domain.usecase.ObserveRoomControlsUseCase
 import com.mews.guestroom.feature.controls.domain.usecase.SetBlindsUseCase
+import com.mews.guestroom.feature.controls.domain.usecase.SetClimateModeUseCase
 import com.mews.guestroom.feature.controls.domain.usecase.SetTargetTemperatureUseCase
 import com.mews.guestroom.feature.controls.domain.usecase.ToggleLightUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -32,6 +34,7 @@ import javax.inject.Inject
 class DashboardViewModel @Inject constructor(
     observeRoomControls: ObserveRoomControlsUseCase,
     private val setTargetTemperature: SetTargetTemperatureUseCase,
+    private val setClimateMode: SetClimateModeUseCase,
     private val toggleLight: ToggleLightUseCase,
     private val setBlinds: SetBlindsUseCase,
     private val activateScene: ActivateEnergySceneUseCase,
@@ -54,6 +57,14 @@ class DashboardViewModel @Inject constructor(
     val events: SharedFlow<DashboardEvent> = _events.asSharedFlow()
 
     fun onTargetTemperatureChange(celsius: Int) = runCommand { setTargetTemperature(celsius) }
+
+    fun onSetClimateMode(mode: ClimateMode) {
+        // Tapping the already-active mode is a no-op: avoid a redundant command that
+        // would clear the active scene and flash the busy state for no real change.
+        val content = uiState.value as? DashboardUiState.Content ?: return
+        if (content.controls.climate.mode == mode) return
+        runCommand { setClimateMode(mode) }
+    }
 
     fun onToggleLight(id: String) = runCommand { toggleLight(id) }
 

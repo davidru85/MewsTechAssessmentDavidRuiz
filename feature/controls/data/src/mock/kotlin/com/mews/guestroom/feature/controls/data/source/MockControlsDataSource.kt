@@ -50,12 +50,14 @@ class MockControlsDataSource @Inject constructor(
 
     override suspend fun setTargetTemperature(celsius: Int): DataResult<Unit> {
         delay(COMMAND_LATENCY_MS)
-        state.update { current ->
-            current.copy(
-                climate = current.climate.copy(targetCelsius = celsius, mode = ClimateMode.AUTO),
-                activeScene = null,
-            )
-        }
+        // Preserve the user's chosen mode — only the target changes here.
+        manualUpdate { it.copy(climate = it.climate.copy(targetCelsius = celsius)) }
+        return DataResult.Success(Unit)
+    }
+
+    override suspend fun setClimateMode(mode: ClimateMode): DataResult<Unit> {
+        delay(COMMAND_LATENCY_MS)
+        manualUpdate { it.copy(climate = it.climate.copy(mode = mode)) }
         return DataResult.Success(Unit)
     }
 
@@ -67,12 +69,11 @@ class MockControlsDataSource @Inject constructor(
         if (state.value.lights.none { it.id == id }) {
             return DataResult.Error("Unknown light: $id")
         }
-        state.update { current ->
+        manualUpdate { current ->
             current.copy(
                 lights = current.lights.map { light ->
                     if (light.id == id) light.copy(isOn = !light.isOn) else light
                 },
-                activeScene = null,
             )
         }
         return DataResult.Success(Unit)
@@ -80,8 +81,17 @@ class MockControlsDataSource @Inject constructor(
 
     override suspend fun setBlinds(position: BlindPosition): DataResult<Unit> {
         delay(COMMAND_LATENCY_MS)
-        state.update { current -> current.copy(blinds = position, activeScene = null) }
+        manualUpdate { it.copy(blinds = position) }
         return DataResult.Success(Unit)
+    }
+
+    /**
+     * Applies a manual control change. Any manual command implicitly cancels an
+     * active scene, so that invariant lives here once — a new command physically
+     * can't forget it.
+     */
+    private fun manualUpdate(transform: (RoomControls) -> RoomControls) {
+        state.update { current -> transform(current).copy(activeScene = null) }
     }
 
     override suspend fun activateScene(scene: EnergyScene): DataResult<Unit> {
@@ -104,7 +114,10 @@ class MockControlsDataSource @Inject constructor(
                 state.update { current ->
                     val climate = current.climate
                     val diff = climate.targetCelsius - climate.currentCelsius
-                    if (climate.mode == ClimateMode.OFF || abs(diff) < DRIFT_STEP) {
+                    // In COOL mode the AC can only cool, so it never drifts the room
+                    // warmer even if the target is set above the current temperature.
+                    val coolingCannotHeat = climate.mode == ClimateMode.COOL && diff > 0
+                    if (climate.mode == ClimateMode.OFF || coolingCannotHeat || abs(diff) < DRIFT_STEP) {
                         current
                     } else {
                         val next = climate.currentCelsius + DRIFT_STEP * sign(diff)
