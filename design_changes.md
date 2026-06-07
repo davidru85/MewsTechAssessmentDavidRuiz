@@ -34,3 +34,18 @@
 **Owner-approved decisions (this session):** switch disabled (not kept interactive); icon-only (no "Unreachable"/"Offline" caption).
 
 **Trade-off:** disabling the switch removes the error snackbar from that row's tap. The data/VM error path stays covered by existing tests (`toggleLight_faultyDevice…`, `onToggleLight_whenRepositoryFails…`).
+
+---
+
+## Phase 1.5 · Slice C — Placeholder routing for Services & Keys (`feat/placeholder-routing`)
+
+**Scope:** navigation shell + two placeholder screens. Build-alongside (navigation/Compose), no unit tests.
+
+**DESIGN.md spec change:** §6 gains a "persistence" note (app-level shared bar); new **§7 Placeholder Screens** — centered tab icon + title + "Coming soon" caption.
+
+**Architecture (owner-approved: app-level shell):**
+- `AppRoot` is now an app-level `Scaffold` owning the persistent `NavigationBar`, wrapping the `NavHost`. The active tab follows the current route via `currentBackStackEntryAsState`. Tabs use single-top + save/restore state.
+- `DashboardScreen`'s `Scaffold` **no longer renders the bottom bar** (it keeps its top bar, snackbar, and content); the bar is now app-level. `RoomBottomNav` and its now-unused imports were removed from the feature.
+- New routes `SERVICES_ROUTE` / `KEYS_ROUTE` in `:app`; both render a shared `PlaceholderScreen` (new, in `:core:ui` `components`).
+
+**Decisions (this session):** app-level shell (vs per-screen callbacks); placeholder = icon + title + "Coming soon".

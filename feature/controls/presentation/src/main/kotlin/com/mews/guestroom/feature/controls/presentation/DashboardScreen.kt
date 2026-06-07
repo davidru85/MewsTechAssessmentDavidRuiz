@@ -28,14 +28,11 @@ import androidx.compose.material.icons.filled.AcUnit
 import androidx.compose.material.icons.filled.Air
 import androidx.compose.material.icons.filled.AutoAwesome
 import androidx.compose.material.icons.filled.DarkMode
-import androidx.compose.material.icons.filled.MeetingRoom
 import androidx.compose.material.icons.filled.Spa
 import androidx.compose.material.icons.filled.Warning
 import androidx.compose.material.icons.filled.WbSunny
 import androidx.compose.material.icons.outlined.Lightbulb
 import androidx.compose.material.icons.outlined.Notifications
-import androidx.compose.material.icons.outlined.RoomService
-import androidx.compose.material.icons.outlined.VpnKey
 import androidx.compose.material.icons.outlined.Wifi
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
@@ -47,9 +44,6 @@ import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
 import androidx.compose.material3.LinearProgressIndicator
 import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.NavigationBar
-import androidx.compose.material3.NavigationBarItem
-import androidx.compose.material3.NavigationBarItemDefaults
 import androidx.compose.material3.OutlinedButton
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.SegmentedButton
@@ -141,7 +135,6 @@ private fun DashboardScaffold(
     Scaffold(
         containerColor = MaterialTheme.colorScheme.background,
         topBar = { RoomTopBar() },
-        bottomBar = { RoomBottomNav() },
         snackbarHost = { SnackbarHost(snackbarHostState) },
     ) { padding ->
         Column(modifier = Modifier.fillMaxSize().padding(padding)) {
@@ -511,42 +504,6 @@ private fun SunriseVista() {
             style = MaterialTheme.typography.titleMedium,
             color = Color.White,
             textAlign = TextAlign.Center,
-        )
-    }
-}
-
-// --- 6. Bottom Navigation (DESIGN.md §6) ---
-
-@Composable
-private fun RoomBottomNav() {
-    NavigationBar(containerColor = MaterialTheme.colorScheme.surfaceContainer) {
-        val itemColors = NavigationBarItemDefaults.colors(
-            selectedIconColor = MaterialTheme.colorScheme.onPrimary,
-            selectedTextColor = MaterialTheme.colorScheme.primary,
-            indicatorColor = MaterialTheme.colorScheme.primary,
-            unselectedIconColor = MaterialTheme.colorScheme.onSurfaceVariant,
-            unselectedTextColor = MaterialTheme.colorScheme.onSurfaceVariant,
-        )
-        NavigationBarItem(
-            selected = true,
-            onClick = {},
-            icon = { Icon(Icons.Filled.MeetingRoom, contentDescription = null) },
-            label = { Text("Room") },
-            colors = itemColors,
-        )
-        NavigationBarItem(
-            selected = false,
-            onClick = {},
-            icon = { Icon(Icons.Outlined.RoomService, contentDescription = null) },
-            label = { Text("Services") },
-            colors = itemColors,
-        )
-        NavigationBarItem(
-            selected = false,
-            onClick = {},
-            icon = { Icon(Icons.Outlined.VpnKey, contentDescription = null) },
-            label = { Text("Keys") },
-            colors = itemColors,
         )
     }
 }

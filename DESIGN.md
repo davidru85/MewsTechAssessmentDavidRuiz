@@ -70,6 +70,12 @@
 ### 6. Bottom Navigation
 - **Destinations:** Room (Active), Services, Keys.
 - **Styling:** Pill-shaped active indicator; semantic icons with clear labels.
+- **Persistence:** the bar is an app-level shell shared by all destinations; the active item follows the current route.
+
+### 7. Placeholder Screens (Services / Keys)
+- **Purpose:** lightweight "Coming soon" destinations for tabs that are not yet built.
+- **Layout:** centered tab icon (RoomService / VpnKey), the tab title, and a "Coming soon" caption, on the standard background.
+- **Navigation:** reached from the bottom nav; the bar persists with the active tab highlighted.
 
 ---
 
