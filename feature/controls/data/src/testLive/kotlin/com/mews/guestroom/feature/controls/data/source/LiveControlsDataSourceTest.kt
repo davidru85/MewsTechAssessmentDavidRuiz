@@ -47,6 +47,14 @@ class LiveControlsDataSourceTest {
     }
 
     @Test
+    fun setClimateMode_returnsNotConnectedError() = runTest {
+        val result = LiveControlsDataSource().setClimateMode(ClimateMode.COOL)
+
+        assertThat(result).isInstanceOf(DataResult.Error::class.java)
+        assertThat((result as DataResult.Error).message).isEqualTo(notConnected)
+    }
+
+    @Test
     fun setBlinds_returnsNotConnectedError() = runTest {
         val result = LiveControlsDataSource().setBlinds(BlindPosition.CLOSED)
 

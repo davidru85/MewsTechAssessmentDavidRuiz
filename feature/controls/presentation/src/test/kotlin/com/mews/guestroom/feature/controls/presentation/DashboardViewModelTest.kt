@@ -10,6 +10,7 @@ import com.mews.guestroom.feature.controls.domain.sampleRoomControls
 import com.mews.guestroom.feature.controls.domain.usecase.ActivateEnergySceneUseCase
 import com.mews.guestroom.feature.controls.domain.usecase.ObserveRoomControlsUseCase
 import com.mews.guestroom.feature.controls.domain.usecase.SetBlindsUseCase
+import com.mews.guestroom.feature.controls.domain.usecase.SetClimateModeUseCase
 import com.mews.guestroom.feature.controls.domain.usecase.SetTargetTemperatureUseCase
 import com.mews.guestroom.feature.controls.domain.usecase.ToggleLightUseCase
 import kotlinx.coroutines.Dispatchers
@@ -42,6 +43,7 @@ class DashboardViewModelTest {
     private fun createViewModel(repository: FakeControlsRepository) = DashboardViewModel(
         observeRoomControls = ObserveRoomControlsUseCase(repository),
         setTargetTemperature = SetTargetTemperatureUseCase(repository),
+        setClimateMode = SetClimateModeUseCase(repository),
         toggleLight = ToggleLightUseCase(repository),
         setBlinds = SetBlindsUseCase(repository),
         activateScene = ActivateEnergySceneUseCase(repository),
@@ -99,6 +101,17 @@ class DashboardViewModelTest {
         advanceUntilIdle()
 
         assertThat(repository.lastTargetCelsius).isEqualTo(22)
+    }
+
+    @Test
+    fun onSetClimateMode_forwardsModeToRepository() = runTest(dispatcher) {
+        val repository = FakeControlsRepository()
+        val viewModel = createViewModel(repository)
+
+        viewModel.onSetClimateMode(ClimateMode.COOL)
+        advanceUntilIdle()
+
+        assertThat(repository.lastClimateMode).isEqualTo(ClimateMode.COOL)
     }
 
     @Test
