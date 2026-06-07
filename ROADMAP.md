@@ -48,7 +48,7 @@ Consolidated work packages identified during the project audit to polish the dem
 - ✅ Wire the Climate Mode Buttons: Add `setClimateMode` to repository/datasource, write use case, and enable button clicks.
 - ✅ Placeholder Screen Routing: Add lightweight placeholder screens ("Coming soon") for bottom-nav Services and Keys tabs.
 - ⬜ Mark Faulty Devices: Add warning indicators to the Bathroom light row to make the deliberate error path obvious.
-- ⬜ README Gaps: Add a "Known Limitations" section in the main README.
+- ✅ README Gaps: Add a "Known Limitations" section in the main README.
 - ⬜ Deliver the Deck: Prepare and send the Miro/PDF presentation deck.
 
 ### Tier 2 — Accessibility & UI Testing

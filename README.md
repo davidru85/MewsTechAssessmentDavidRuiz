@@ -81,6 +81,20 @@ Testing strategy (domain use-case, ViewModel state via Turbine, Compose smoke te
 
 ---
 
+## Known Limitations
+
+Honest scope of the prototype — what it deliberately does **not** do yet:
+
+- **Mock data only, no backend or hardware.** The `live` flavor is an honest *disconnected* stub: it emits one neutral snapshot (climate `OFF`) so the dashboard renders, and every command returns a clear "not connected" error. Use the `mock` flavor for the demo.
+- **No state persistence.** The mock room state is in-memory; it resets on process death and configuration changes (e.g. rotation). Persisting it is tracked in [ROADMAP.md](ROADMAP.md) → Phase 1.5 Tier 3.
+- **Single hard-coded room** ("Suite 402"). No room selection, authentication, or multi-room support.
+- **Only the Controls/Dashboard feature is functional.** The **Services** and **Keys** bottom-nav tabs are lightweight "Coming soon" placeholders; the real Access/Keyless-entry slice is Phase 1.5 Tier 4.
+- **Compose UI smoke test deferred** (needs Robolectric/emulator). UI and navigation are "build-alongside" — covered by compilation and manual on-device verification, not unit tests. Domain, data, and ViewModel logic *are* unit-tested ([TESTING_STRATEGY.md](TESTING_STRATEGY.md)).
+- **The faulty device is a demo seam.** The Bathroom light is deliberately "unreachable" to show the error path; its switch is disabled with a warning indicator, so the error surfaces visually rather than via a snackbar on that row.
+- **Internal dispatcher injection pending.** `provideControlsScope` hardcodes `Dispatchers.Default` instead of an injected qualified dispatcher — tracked in [ROADMAP.md](ROADMAP.md) → Phase 1.5 Tier 3.
+
+---
+
 ## Project Structure
 
 ```text
