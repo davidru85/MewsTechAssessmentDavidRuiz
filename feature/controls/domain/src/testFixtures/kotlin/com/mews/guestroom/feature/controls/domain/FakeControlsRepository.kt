@@ -25,6 +25,7 @@ class FakeControlsRepository(
     val state = MutableStateFlow(initial)
 
     var lastTargetCelsius: Int? = null
+    var lastClimateMode: ClimateMode? = null
     var lastToggledLightId: String? = null
     var lastBlinds: BlindPosition? = null
     var lastScene: EnergyScene? = null
@@ -43,6 +44,11 @@ class FakeControlsRepository(
 
     override suspend fun setTargetTemperature(celsius: Int): DataResult<Unit> {
         lastTargetCelsius = celsius
+        return result()
+    }
+
+    override suspend fun setClimateMode(mode: ClimateMode): DataResult<Unit> {
+        lastClimateMode = mode
         return result()
     }
 

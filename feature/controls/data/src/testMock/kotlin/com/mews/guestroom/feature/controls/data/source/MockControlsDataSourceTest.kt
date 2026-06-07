@@ -6,6 +6,8 @@ import com.mews.guestroom.core.common.result.DataResult
 import com.mews.guestroom.feature.controls.domain.model.BlindPosition
 import com.mews.guestroom.feature.controls.domain.model.ClimateMode
 import com.mews.guestroom.feature.controls.domain.model.EnergyScene
+import kotlinx.coroutines.ExperimentalCoroutinesApi
+import kotlinx.coroutines.test.advanceTimeBy
 import kotlinx.coroutines.test.runTest
 import org.junit.Test
 
@@ -85,6 +87,48 @@ class MockControlsDataSourceTest {
             val updated = awaitItem()
             assertThat(updated.climate.mode).isEqualTo(ClimateMode.COOL)
             assertThat(updated.activeScene).isNull()
+            cancelAndIgnoreRemainingEvents()
+        }
+    }
+
+    @Test
+    fun setTargetTemperature_preservesCurrentClimateMode() = runTest {
+        val dataSource = MockControlsDataSource(backgroundScope)
+
+        dataSource.controls.test {
+            awaitItem() // initial, mode AUTO
+
+            dataSource.setClimateMode(ClimateMode.COOL)
+            awaitItem()
+
+            // Adjusting the target must not silently reset the user's chosen mode.
+            dataSource.setTargetTemperature(22)
+            val updated = awaitItem()
+            assertThat(updated.climate.mode).isEqualTo(ClimateMode.COOL)
+            assertThat(updated.climate.targetCelsius).isEqualTo(22)
+            cancelAndIgnoreRemainingEvents()
+        }
+    }
+
+    @OptIn(ExperimentalCoroutinesApi::class)
+    @Test
+    fun temperatureDrift_inCoolMode_doesNotHeatTowardHigherTarget() = runTest {
+        val dataSource = MockControlsDataSource(backgroundScope)
+
+        dataSource.controls.test {
+            val initial = awaitItem() // current 24.0
+            val startTemp = initial.climate.currentCelsius
+
+            dataSource.setClimateMode(ClimateMode.COOL)
+            awaitItem()
+            // Target above the current room temp: cooling must never push it warmer.
+            dataSource.setTargetTemperature(26)
+            assertThat(awaitItem().climate.currentCelsius).isEqualTo(startTemp)
+
+            // Let several drift ticks pass; in COOL mode the room cannot heat up,
+            // so the state must not change (a StateFlow re-emits only on change).
+            advanceTimeBy(10_000)
+            expectNoEvents()
             cancelAndIgnoreRemainingEvents()
         }
     }

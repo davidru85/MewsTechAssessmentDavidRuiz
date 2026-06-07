@@ -45,7 +45,7 @@ One feature end-to-end on mock data — the demo deliverable.
 Consolidated work packages identified during the project audit to polish the demo and prepare the codebase for Phase 2.
 
 ### Tier 1 — Pre-Demo Polish & Logistics (Highest Priority)
-- ⬜ Wire the Climate Mode Buttons: Add `setClimateMode` to repository/datasource, write use case, and enable button clicks.
+- ✅ Wire the Climate Mode Buttons: Add `setClimateMode` to repository/datasource, write use case, and enable button clicks.
 - ⬜ Placeholder Screen Routing: Add lightweight placeholder screens ("Coming soon") for bottom-nav Services and Keys tabs.
 - ⬜ Mark Faulty Devices: Add warning indicators to the Bathroom light row to make the deliberate error path obvious.
 - ⬜ README Gaps: Add a "Known Limitations" section in the main README.

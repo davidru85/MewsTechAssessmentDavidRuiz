@@ -2,6 +2,7 @@ package com.mews.guestroom.feature.controls.data.source
 
 import com.mews.guestroom.core.common.result.DataResult
 import com.mews.guestroom.feature.controls.domain.model.BlindPosition
+import com.mews.guestroom.feature.controls.domain.model.ClimateMode
 import com.mews.guestroom.feature.controls.domain.model.EnergyScene
 import com.mews.guestroom.feature.controls.domain.model.RoomControls
 import kotlinx.coroutines.flow.Flow
@@ -15,6 +16,8 @@ interface ControlsDataSource {
     val controls: Flow<RoomControls>
 
     suspend fun setTargetTemperature(celsius: Int): DataResult<Unit>
+
+    suspend fun setClimateMode(mode: ClimateMode): DataResult<Unit>
 
     suspend fun toggleLight(id: String): DataResult<Unit>
 

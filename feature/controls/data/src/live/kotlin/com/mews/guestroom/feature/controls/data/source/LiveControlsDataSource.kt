@@ -28,6 +28,8 @@ class LiveControlsDataSource @Inject constructor() : ControlsDataSource {
 
     override suspend fun setTargetTemperature(celsius: Int): DataResult<Unit> = notConnected()
 
+    override suspend fun setClimateMode(mode: ClimateMode): DataResult<Unit> = notConnected()
+
     override suspend fun toggleLight(id: String): DataResult<Unit> = notConnected()
 
     override suspend fun setBlinds(position: BlindPosition): DataResult<Unit> = notConnected()

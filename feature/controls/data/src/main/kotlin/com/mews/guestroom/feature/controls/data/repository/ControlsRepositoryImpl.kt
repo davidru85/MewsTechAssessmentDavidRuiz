@@ -3,6 +3,7 @@ package com.mews.guestroom.feature.controls.data.repository
 import com.mews.guestroom.core.common.result.DataResult
 import com.mews.guestroom.feature.controls.data.source.ControlsDataSource
 import com.mews.guestroom.feature.controls.domain.model.BlindPosition
+import com.mews.guestroom.feature.controls.domain.model.ClimateMode
 import com.mews.guestroom.feature.controls.domain.model.EnergyScene
 import com.mews.guestroom.feature.controls.domain.model.RoomControls
 import com.mews.guestroom.feature.controls.domain.repository.ControlsRepository
@@ -22,6 +23,9 @@ class ControlsRepositoryImpl @Inject constructor(
 
     override suspend fun setTargetTemperature(celsius: Int): DataResult<Unit> =
         dataSource.setTargetTemperature(celsius)
+
+    override suspend fun setClimateMode(mode: ClimateMode): DataResult<Unit> =
+        dataSource.setClimateMode(mode)
 
     override suspend fun toggleLight(id: String): DataResult<Unit> =
         dataSource.toggleLight(id)

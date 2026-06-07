@@ -93,6 +93,7 @@ import kotlin.math.roundToInt
 /** User actions the dashboard can trigger, grouped to keep composable signatures small. */
 data class DashboardActions(
     val onTargetTemperatureChange: (Int) -> Unit,
+    val onSetClimateMode: (ClimateMode) -> Unit,
     val onToggleLight: (String) -> Unit,
     val onSetBlinds: (BlindPosition) -> Unit,
     val onActivateScene: (EnergyScene) -> Unit,
@@ -110,6 +111,7 @@ fun DashboardScreen(viewModel: DashboardViewModel = hiltViewModel()) {
         snackbarHostState = snackbarHostState,
         actions = DashboardActions(
             onTargetTemperatureChange = viewModel::onTargetTemperatureChange,
+            onSetClimateMode = viewModel::onSetClimateMode,
             onToggleLight = viewModel::onToggleLight,
             onSetBlinds = viewModel::onSetBlinds,
             onActivateScene = viewModel::onActivateScene,
@@ -162,7 +164,7 @@ private fun DashboardContent(state: DashboardUiState.Content, actions: Dashboard
             .padding(horizontal = OUTER_MARGIN, vertical = CARD_GAP),
         verticalArrangement = Arrangement.spacedBy(CARD_GAP),
     ) {
-        ClimateSection(state.controls.climate, actions.onTargetTemperatureChange)
+        ClimateSection(state.controls.climate, actions.onTargetTemperatureChange, actions.onSetClimateMode)
         AtmosphereSection(state.controls.activeScene, actions.onActivateScene)
         LightingSection(state.controls.lights, actions.onToggleLight)
         PrivacyAndViewSection(state.controls.blinds, actions.onSetBlinds)
@@ -249,7 +251,11 @@ private fun InSyncPill() {
 // --- 2. Climate Control (DESIGN.md §2) ---
 
 @Composable
-private fun ClimateSection(climate: Climate, onTargetTemperatureChange: (Int) -> Unit) {
+private fun ClimateSection(
+    climate: Climate,
+    onTargetTemperatureChange: (Int) -> Unit,
+    onSetClimateMode: (ClimateMode) -> Unit,
+) {
     SectionCard(title = "Climate Control") {
         // Local thumb position during a drag so it moves smoothly; we dispatch a single command on
         // release. Re-keyed on the confirmed target so backend/scene updates re-sync the thumb.
@@ -280,7 +286,7 @@ private fun ClimateSection(climate: Climate, onTargetTemperatureChange: (Int) ->
             onValueChangeFinished = { onTargetTemperatureChange(sliderValue.roundToInt()) },
         )
 
-        ClimateModeButtons(climate.mode)
+        ClimateModeButtons(climate.mode, onSetClimateMode)
     }
 }
 
@@ -329,28 +335,35 @@ private fun TargetSlider(
 }
 
 @Composable
-private fun ClimateModeButtons(mode: ClimateMode) {
+private fun ClimateModeButtons(mode: ClimateMode, onSetClimateMode: (ClimateMode) -> Unit) {
     Row(horizontalArrangement = Arrangement.spacedBy(12.dp), modifier = Modifier.fillMaxWidth()) {
-        // NOTE: climate mode is display-only for now — the active state reflects the live mode, but
-        // dispatching a mode change needs a SetClimateMode use case (domain/data + tests), tracked
-        // as the next slice. Kept here so the layout matches DESIGN.md §2.
+        // The two buttons match DESIGN.md §2; tapping one sets that mode (the active
+        // button reflects the live mode and stays high-filled while selected).
         ModeButton(
             label = "Auto Fan",
             icon = Icons.Filled.Air,
             active = mode == ClimateMode.AUTO,
+            onClick = { onSetClimateMode(ClimateMode.AUTO) },
             modifier = Modifier.weight(1f),
         )
         ModeButton(
             label = "Cooling",
             icon = Icons.Filled.AcUnit,
             active = mode == ClimateMode.COOL,
+            onClick = { onSetClimateMode(ClimateMode.COOL) },
             modifier = Modifier.weight(1f),
         )
     }
 }
 
 @Composable
-private fun ModeButton(label: String, icon: ImageVector, active: Boolean, modifier: Modifier = Modifier) {
+private fun ModeButton(
+    label: String,
+    icon: ImageVector,
+    active: Boolean,
+    onClick: () -> Unit,
+    modifier: Modifier = Modifier,
+) {
     val content = @Composable {
         Icon(icon, contentDescription = null, modifier = Modifier.size(18.dp))
         Spacer(Modifier.width(8.dp))
@@ -358,13 +371,13 @@ private fun ModeButton(label: String, icon: ImageVector, active: Boolean, modifi
     }
     if (active) {
         Button(
-            onClick = {},
+            onClick = onClick,
             modifier = modifier.heightIn(min = 52.dp),
             shape = MaterialTheme.shapes.medium,
         ) { content() }
     } else {
         OutlinedButton(
-            onClick = {},
+            onClick = onClick,
             modifier = modifier.heightIn(min = 52.dp),
             shape = MaterialTheme.shapes.medium,
             colors = ButtonDefaults.outlinedButtonColors(
@@ -597,7 +610,7 @@ private fun DashboardContentPreview() {
                 ),
                 isActionInProgress = false,
             ),
-            actions = DashboardActions({}, {}, {}, {}),
+            actions = DashboardActions({}, {}, {}, {}, {}),
         )
     }
 }
