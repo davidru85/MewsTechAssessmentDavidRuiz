@@ -26,6 +26,38 @@ class MockControlsDataSourceTest {
     }
 
     @Test
+    fun initialState_marksOnlyTheBathroomLightAsFaulty() = runTest {
+        val dataSource = MockControlsDataSource(backgroundScope)
+
+        dataSource.controls.test {
+            val initial = awaitItem()
+            // The deliberate fault is modelled up-front so the UI can flag it,
+            // rather than only surfacing after a failed toggle.
+            assertThat(initial.lights.first { it.id == "bathroom" }.isFaulty).isTrue()
+            assertThat(initial.lights.filter { it.id != "bathroom" }.none { it.isFaulty }).isTrue()
+            cancelAndIgnoreRemainingEvents()
+        }
+    }
+
+    @Test
+    fun activateScene_doesNotTurnOnFaultyLights() = runTest {
+        val dataSource = MockControlsDataSource(backgroundScope)
+
+        dataSource.controls.test {
+            awaitItem() // initial: bathroom off + faulty
+
+            dataSource.activateScene(EnergyScene.WELCOME) // lightsOn = true
+
+            val updated = awaitItem()
+            // An unreachable device must not be reported as switched on by a scene.
+            assertThat(updated.lights.first { it.id == "bathroom" }.isOn).isFalse()
+            // Reachable lights still follow the scene.
+            assertThat(updated.lights.first { it.id == "ceiling" }.isOn).isTrue()
+            cancelAndIgnoreRemainingEvents()
+        }
+    }
+
+    @Test
     fun toggleLight_flipsThatLightsState() = runTest {
         val dataSource = MockControlsDataSource(backgroundScope)
 
