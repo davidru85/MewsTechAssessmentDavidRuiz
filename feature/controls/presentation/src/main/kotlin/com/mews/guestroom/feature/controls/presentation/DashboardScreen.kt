@@ -30,6 +30,7 @@ import androidx.compose.material.icons.filled.AutoAwesome
 import androidx.compose.material.icons.filled.DarkMode
 import androidx.compose.material.icons.filled.MeetingRoom
 import androidx.compose.material.icons.filled.Spa
+import androidx.compose.material.icons.filled.Warning
 import androidx.compose.material.icons.filled.WbSunny
 import androidx.compose.material.icons.outlined.Lightbulb
 import androidx.compose.material.icons.outlined.Notifications
@@ -445,7 +446,24 @@ private fun LightingSection(lights: List<LightControl>, onToggleLight: (String) 
                         color = MaterialTheme.colorScheme.onSurface,
                     )
                 }
-                Switch(checked = light.isOn, onCheckedChange = { onToggleLight(light.id) })
+                Row(verticalAlignment = Alignment.CenterVertically) {
+                    if (light.isFaulty) {
+                        // Surface the deliberate fault up-front; the switch is disabled
+                        // because the device is known to be unreachable (DESIGN.md §4).
+                        Icon(
+                            imageVector = Icons.Filled.Warning,
+                            contentDescription = "Unreachable",
+                            tint = MaterialTheme.colorScheme.error,
+                            modifier = Modifier.size(20.dp),
+                        )
+                        Spacer(Modifier.width(8.dp))
+                    }
+                    Switch(
+                        checked = light.isOn,
+                        onCheckedChange = { onToggleLight(light.id) },
+                        enabled = !light.isFaulty,
+                    )
+                }
             }
         }
     }

@@ -99,7 +99,10 @@ class MockControlsDataSource @Inject constructor(
         state.update { current ->
             current.copy(
                 climate = current.climate.copy(targetCelsius = scene.targetCelsius, mode = ClimateMode.AUTO),
-                lights = current.lights.map { it.copy(isOn = scene.lightsOn) },
+                // A scene can't actuate an unreachable device, so leave faulty lights as-is.
+                lights = current.lights.map { light ->
+                    if (light.isFaulty) light else light.copy(isOn = scene.lightsOn)
+                },
                 blinds = scene.blinds,
                 activeScene = scene,
             )
@@ -140,11 +143,13 @@ class MockControlsDataSource @Inject constructor(
 
         fun initialState() = RoomControls(
             climate = Climate(currentCelsius = 24.0, targetCelsius = 21, mode = ClimateMode.AUTO),
+            // Derive isFaulty from FAULTY_LIGHT_IDS so "which device is faulty" has a
+            // single source of truth shared with toggleLight().
             lights = listOf(
                 LightControl(id = "ceiling", name = "Ceiling", isOn = true),
                 LightControl(id = "bedside", name = "Bedside", isOn = false),
                 LightControl(id = "bathroom", name = "Bathroom", isOn = false),
-            ),
+            ).map { it.copy(isFaulty = it.id in FAULTY_LIGHT_IDS) },
             blinds = BlindPosition.OPEN,
             activeScene = null,
         )

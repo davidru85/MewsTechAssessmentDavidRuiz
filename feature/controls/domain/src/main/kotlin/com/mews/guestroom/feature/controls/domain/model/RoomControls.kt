@@ -22,11 +22,12 @@ data class Climate(
 
 enum class ClimateMode { COOL, HEAT, AUTO, OFF }
 
-/** A single controllable light. */
+/** A single controllable light. [isFaulty] flags a device known to be unreachable. */
 data class LightControl(
     val id: String,
     val name: String,
     val isOn: Boolean,
+    val isFaulty: Boolean = false,
 )
 
 enum class BlindPosition { OPEN, HALF, CLOSED }

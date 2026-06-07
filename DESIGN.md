@@ -58,9 +58,10 @@
 - **Active State:** Solid fill with contrasting icon/text color.
 
 ### 4. Lighting (Section)
-- **Items:** Main Lights, Bedside Lamps, Desk Workspace.
+- **Items:** Ceiling, Bedside, Bathroom.
 - **Layout:** Icon (left), Label (center), Switch (right).
 - **Detail:** Subtle dividers between rows; consistent 48dp touch targets.
+- **Faulty device state:** a row whose device is unreachable shows a small warning icon (error tint) immediately left of the switch, and its switch is **disabled** (non-interactive). No caption text. (Mock: the Bathroom light is the deliberate fault.)
 
 ### 5. Privacy & View (Section)
 - **Control:** Segmented tab control (Open / Half / Closed).

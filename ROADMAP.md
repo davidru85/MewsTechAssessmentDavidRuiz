@@ -61,6 +61,7 @@ Consolidated work packages identified during the project audit to polish the dem
 - ⬜ Offline UI State: Add dedicated disconnected state UI overlay for the `live` flavor.
 - ⬜ Save Mock State: Persist mock control states to survive process deaths/rotations.
 - ⬜ Detekt Scoping: Scope `MagicNumber` rules to layout directories instead of global suppression.
+- ⬜ Inject Qualified Dispatchers: replace the hardcoded `Dispatchers.Default` in `provideControlsScope` with an injected `@DefaultDispatcher` from a `:core:common` `DispatchersModule` (binds `@IoDispatcher`/`@DefaultDispatcher`).
 
 ### Tier 4 — Feature Expansion & Telemetry
 - ⬜ Access/Keyless Entry Slice: Implement `:feature:access` and wire to the "Keys" nav route.
