@@ -40,6 +40,37 @@ One feature end-to-end on mock data — the demo deliverable.
 
 ---
 
+## Phase 1.5 — Audit Action Items & Next Steps ⬜
+
+Consolidated work packages identified during the project audit to polish the demo and prepare the codebase for Phase 2.
+
+### Tier 1 — Pre-Demo Polish & Logistics (Highest Priority)
+- ⬜ Wire the Climate Mode Buttons: Add `setClimateMode` to repository/datasource, write use case, and enable button clicks.
+- ⬜ Placeholder Screen Routing: Add lightweight placeholder screens ("Coming soon") for bottom-nav Services and Keys tabs.
+- ⬜ Mark Faulty Devices: Add warning indicators to the Bathroom light row to make the deliberate error path obvious.
+- ⬜ README Gaps: Add a "Known Limitations" section in the main README.
+- ⬜ Deliver the Deck: Prepare and send the Miro/PDF presentation deck.
+
+### Tier 2 — Accessibility & UI Testing
+- ⬜ Compose Smoke Tests: Write a Robolectric-based Compose test to assert UI state rendering.
+- ⬜ Accessibility Merger: Merge Lighting row TalkBack focus targets (`mergeDescendants = true`).
+- ⬜ Polite Live Regions: Set `liveRegion = Polite` on progress/busy indicators.
+- ⬜ Reconcile Test Wording: Update documentation to state the unified test count (23 unit tests).
+
+### Tier 3 — Production Seam & Hardening
+- ⬜ Offline UI State: Add dedicated disconnected state UI overlay for the `live` flavor.
+- ⬜ Save Mock State: Persist mock control states to survive process deaths/rotations.
+- ⬜ Detekt Scoping: Scope `MagicNumber` rules to layout directories instead of global suppression.
+
+### Tier 4 — Feature Expansion & Telemetry
+- ⬜ Access/Keyless Entry Slice: Implement `:feature:access` and wire to the "Keys" nav route.
+- ⬜ In-App Event Log: Create an overlay showing domain events to connect telemetry with engineering.
+- ⬜ Konsist Rules: Transition grep-based architecture checks to Konsist test-based rules.
+
+**Exit criteria:** All Tier 1 and Tier 2 items complete, resolving immediate objections and accessibility gaps.
+
+---
+
 ## Phase 2 — MVP Pilot ⬜
 
 Make one feature real for ~10 pilot rooms.
