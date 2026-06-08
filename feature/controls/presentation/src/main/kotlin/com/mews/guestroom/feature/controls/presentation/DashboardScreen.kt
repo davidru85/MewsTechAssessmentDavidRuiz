@@ -5,8 +5,11 @@ import androidx.compose.animation.core.animateFloat
 import androidx.compose.animation.core.infiniteRepeatable
 import androidx.compose.animation.core.rememberInfiniteTransition
 import androidx.compose.animation.core.tween
+import androidx.compose.foundation.Canvas
+import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
-import androidx.compose.foundation.interaction.MutableInteractionSource
+import androidx.compose.foundation.gestures.detectDragGestures
+import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -49,8 +52,6 @@ import androidx.compose.material3.Scaffold
 import androidx.compose.material3.SegmentedButton
 import androidx.compose.material3.SegmentedButtonDefaults
 import androidx.compose.material3.SingleChoiceSegmentedButtonRow
-import androidx.compose.material3.Slider
-import androidx.compose.material3.SliderDefaults
 import androidx.compose.material3.SnackbarHost
 import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.Surface
@@ -66,26 +67,21 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.alpha
-import androidx.compose.ui.graphics.Brush
-import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.graphics.vector.ImageVector
-import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.text.style.TextAlign
-import androidx.compose.ui.tooling.preview.Preview
-import androidx.compose.ui.unit.DpSize
-import androidx.compose.ui.unit.dp
-import androidx.compose.foundation.Canvas
-import androidx.compose.foundation.Image
-import androidx.compose.foundation.gestures.detectDragGestures
-import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.geometry.Offset
+import androidx.compose.ui.graphics.Brush
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.StrokeCap
+import androidx.compose.ui.graphics.drawscope.DrawScope
 import androidx.compose.ui.graphics.drawscope.Stroke
+import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
-import androidx.compose.ui.unit.IntSize
+import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.mews.guestroom.core.ui.theme.GuestRoomTheme
@@ -297,7 +293,7 @@ private fun ClimateDial(
         modifier = modifier
             .size(240.dp)
             .padding(12.dp),
-        contentAlignment = Alignment.Center
+        contentAlignment = Alignment.Center,
     ) {
         val primaryColor = MaterialTheme.colorScheme.primary
         val outlineVariant = MaterialTheme.colorScheme.outlineVariant
@@ -335,94 +331,88 @@ private fun ClimateDial(
                         },
                         onDragCancel = {
                             onValueChangeFinished()
-                        }
+                        },
                     )
-                }
+                },
         ) {
-            val strokeWidth = 8.dp.toPx()
-            val innerRadius = (size.minDimension - strokeWidth) / 2f
-
-            // Draw background circle
-            drawCircle(
-                color = if (isDark) Color.White.copy(alpha = 0.05f) else outlineVariant.copy(alpha = 0.2f),
-                radius = innerRadius,
-                style = Stroke(width = strokeWidth)
-            )
-
-            // Draw active arc (from 12 o'clock, which is -90 degrees, sweeping clockwise)
-            drawArc(
-                color = primaryColor,
-                startAngle = -90f,
-                sweepAngle = fraction * 360f,
-                useCenter = false,
-                style = Stroke(width = strokeWidth, cap = StrokeCap.Round)
-            )
-
-            // Draw thumb handle at the end of the active arc
-            val angleRad = Math.toRadians((fraction * 360f - 90f).toDouble())
-            val thumbX = (center.x + innerRadius * kotlin.math.cos(angleRad)).toFloat()
-            val thumbY = (center.y + innerRadius * kotlin.math.sin(angleRad)).toFloat()
-
-            if (isDark) {
-                // Dark mode: filled primary thumb with border/glow representation
-                drawCircle(
-                    color = primaryColor,
-                    center = Offset(thumbX, thumbY),
-                    radius = 12.dp.toPx()
-                )
-                drawCircle(
-                    color = backgroundColor,
-                    center = Offset(thumbX, thumbY),
-                    radius = 8.dp.toPx()
-                )
-                drawCircle(
-                    color = primaryColor,
-                    center = Offset(thumbX, thumbY),
-                    radius = 4.dp.toPx()
-                )
-            } else {
-                // Light mode: white thumb with primary border
-                drawCircle(
-                    color = primaryColor,
-                    center = Offset(thumbX, thumbY),
-                    radius = 12.dp.toPx()
-                )
-                drawCircle(
-                    color = Color.White,
-                    center = Offset(thumbX, thumbY),
-                    radius = 9.dp.toPx()
-                )
-            }
+            drawDial(fraction, primaryColor, outlineVariant, backgroundColor, isDark)
         }
 
-        // Central Text Content
-        Column(
-            horizontalAlignment = Alignment.CenterHorizontally
+        ClimateDialLabel(value = value, currentCelsius = currentCelsius)
+    }
+}
+
+@Composable
+private fun ClimateDialLabel(value: Float, currentCelsius: Double) {
+    Column(
+        horizontalAlignment = Alignment.CenterHorizontally,
+    ) {
+        Text(
+            text = "Inside Temp",
+            style = MaterialTheme.typography.bodyMedium,
+            color = MaterialTheme.colorScheme.onSurfaceVariant,
+        )
+        Spacer(modifier = Modifier.height(4.dp))
+        Text(
+            text = "${currentCelsius.roundToInt()}°C",
+            style = MaterialTheme.typography.displayLarge.copy(fontWeight = FontWeight.Bold),
+            color = MaterialTheme.colorScheme.onSurface,
+        )
+        Spacer(modifier = Modifier.height(8.dp))
+        Surface(
+            shape = CircleShape,
+            color = MaterialTheme.colorScheme.primary.copy(alpha = 0.12f),
         ) {
             Text(
-                text = "Inside Temp",
-                style = MaterialTheme.typography.bodyMedium,
-                color = MaterialTheme.colorScheme.onSurfaceVariant,
+                text = "Target ${value.roundToInt()}°C",
+                style = MaterialTheme.typography.labelMedium.copy(fontWeight = FontWeight.Bold),
+                color = MaterialTheme.colorScheme.primary,
+                modifier = Modifier.padding(horizontal = 12.dp, vertical = 6.dp),
             )
-            Spacer(modifier = Modifier.height(4.dp))
-            Text(
-                text = "${currentCelsius.roundToInt()}°C",
-                style = MaterialTheme.typography.displayLarge.copy(fontWeight = FontWeight.Bold),
-                color = MaterialTheme.colorScheme.onSurface,
-            )
-            Spacer(modifier = Modifier.height(8.dp))
-            Surface(
-                shape = CircleShape,
-                color = MaterialTheme.colorScheme.primary.copy(alpha = 0.12f),
-            ) {
-                Text(
-                    text = "Target ${value.roundToInt()}°C",
-                    style = MaterialTheme.typography.labelMedium.copy(fontWeight = FontWeight.Bold),
-                    color = MaterialTheme.colorScheme.primary,
-                    modifier = Modifier.padding(horizontal = 12.dp, vertical = 6.dp)
-                )
-            }
         }
+    }
+}
+
+private fun DrawScope.drawDial(
+    fraction: Float,
+    primaryColor: Color,
+    outlineVariant: Color,
+    backgroundColor: Color,
+    isDark: Boolean,
+) {
+    val strokeWidth = 8.dp.toPx()
+    val innerRadius = (size.minDimension - strokeWidth) / 2f
+
+    // Draw background circle
+    drawCircle(
+        color = if (isDark) Color.White.copy(alpha = 0.05f) else outlineVariant.copy(alpha = 0.2f),
+        radius = innerRadius,
+        style = Stroke(width = strokeWidth),
+    )
+
+    // Draw active arc (from 12 o'clock, which is -90 degrees, sweeping clockwise)
+    drawArc(
+        color = primaryColor,
+        startAngle = -90f,
+        sweepAngle = fraction * 360f,
+        useCenter = false,
+        style = Stroke(width = strokeWidth, cap = StrokeCap.Round),
+    )
+
+    // Draw thumb handle at the end of the active arc
+    val angleRad = Math.toRadians((fraction * 360f - 90f).toDouble())
+    val thumbX = (center.x + innerRadius * kotlin.math.cos(angleRad)).toFloat()
+    val thumbY = (center.y + innerRadius * kotlin.math.sin(angleRad)).toFloat()
+
+    if (isDark) {
+        // Dark mode: filled primary thumb with border/glow representation
+        drawCircle(color = primaryColor, center = Offset(thumbX, thumbY), radius = 12.dp.toPx())
+        drawCircle(color = backgroundColor, center = Offset(thumbX, thumbY), radius = 8.dp.toPx())
+        drawCircle(color = primaryColor, center = Offset(thumbX, thumbY), radius = 4.dp.toPx())
+    } else {
+        // Light mode: white thumb with primary border
+        drawCircle(color = primaryColor, center = Offset(thumbX, thumbY), radius = 12.dp.toPx())
+        drawCircle(color = Color.White, center = Offset(thumbX, thumbY), radius = 9.dp.toPx())
     }
 }
 
@@ -592,22 +582,22 @@ private fun SunriseVista() {
             .fillMaxWidth()
             .height(140.dp)
             .clip(MaterialTheme.shapes.medium),
-        contentAlignment = Alignment.Center
+        contentAlignment = Alignment.Center,
     ) {
         Image(
             painter = painterResource(id = com.mews.guestroom.core.ui.R.drawable.sunrise_vista),
             contentDescription = "Sunrise Vista",
             modifier = Modifier.fillMaxSize(),
-            contentScale = ContentScale.Crop
+            contentScale = ContentScale.Crop,
         )
         Box(
             modifier = Modifier
                 .fillMaxSize()
                 .background(
                     Brush.verticalGradient(
-                        colors = listOf(Color.Transparent, Color.Black.copy(alpha = 0.6f))
-                    )
-                )
+                        colors = listOf(Color.Transparent, Color.Black.copy(alpha = 0.6f)),
+                    ),
+                ),
         )
         Text(
             text = "Sunrise Vista",
@@ -665,11 +655,6 @@ private fun EnergyScene.icon(): ImageVector =
 private fun String.label(): String = lowercase().replaceFirstChar { it.uppercase() }
 
 private val SyncGreen = Color(0xFF3DDC84)
-private val SunriseColors = listOf(
-    Color(0xFFFFB36B),
-    Color(0xFFFF8C66),
-    Color(0xFF8E5A9E),
-)
 
 private val OUTER_MARGIN = 16.dp
 private val CARD_GAP = 16.dp
