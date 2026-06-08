@@ -30,10 +30,10 @@
 
 ## Step-by-Step Walkthrough (60–90s)
 
-1. **Launch → Dashboard.** Room state at a glance: temperature, lights, blinds, energy mode.
+1. **Launch → Dashboard.** Room state at a glance: temperature, climate mode, lights, blinds, energy scenes.
 2. **Adjust thermostat** with the slider/dial → state updates reactively; mock ambient temperature begins drifting toward the set point.
 3. **Toggle lights / blinds** → immediate, believable state change with brief loading.
-4. **Tap "Sleep Mode"** → one action dims lights, closes blinds, sets a sleep-friendly temperature (the orchestration use case).
+4. **Tap the Sleep scene** → one action dims lights, closes blinds, sets a sleep-friendly temperature (the orchestration use case).
 5. **Show the error path** — the **Bathroom** light (intentionally faulty) renders a warning icon with its switch **disabled**, surfacing the unreachable device up-front. The underlying error path (a command against a faulty device returns an error) is still covered by data/ViewModel tests — the UI just makes the fault obvious rather than waiting for a failed tap.
 
 *(`./gradlew :app:installMockDebug`, then open the app — the Dashboard is the start destination.)*

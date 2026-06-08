@@ -20,9 +20,9 @@ Hotel rooms frustrate guests (confusing HVAC/lighting, key-card-in-slot power wa
 
 - Multi-module, **feature-isolated Clean Architecture + MVVM** Android app in Kotlin.
 - **Mock data only**, no backend — `mock` / `live` product flavors make the production seam real from day one.
-- Core flow: a **Room Dashboard** with thermostat, lights/blinds, and one-tap Smart Energy Modes, driven by believable time-varying mock state.
+- Core flow: a **Room Dashboard** with thermostat, climate modes (Auto Fan / Cooling), lights/blinds, and one-tap energy scenes (Sleep / Away / Welcome), driven by believable time-varying mock state.
 
-**Current status (honest):** the modular foundation plus the **Controls/Dashboard** feature slice (domain/data/presentation) are built and run on the `mock` flavor — thermostat, lights, blinds, and one-tap energy scenes over believable mock data. Other feature areas are documented, not coded. See [PROTOTYPE_OVERVIEW.md](PROTOTYPE_OVERVIEW.md) and [ASSESSMENT_ALIGNMENT.md](ASSESSMENT_ALIGNMENT.md).
+**Current status (honest):** the modular foundation plus the **Controls/Dashboard** feature slice (domain/data/presentation) are built and run on the `mock` flavor — thermostat, climate modes, lights, blinds, and one-tap energy scenes over believable mock data. Other feature areas are documented, not coded. See [PROTOTYPE_OVERVIEW.md](PROTOTYPE_OVERVIEW.md) and [ASSESSMENT_ALIGNMENT.md](ASSESSMENT_ALIGNMENT.md).
 
 **UI design source of truth:** [DESIGN.md](DESIGN.md) is the canonical spec for the UI. Edit it to drive UI changes — the implementation follows it.
 
@@ -99,7 +99,7 @@ Honest scope of the prototype — what it deliberately does **not** do yet:
 
 ```text
 app/                     Composition root, Android app, mock/live flavors, root NavHost
-core/common/             Result wrappers, dispatchers, clock, logging (technical only)
+core/common/             Result wrappers + dispatcher qualifiers (technical only)
 core/ui/                 Material 3 theme, design tokens, generic UI primitives
 feature/<name>/          Per-feature domain / data / presentation (added per slice)
 docs/                    Architecture notes, ADRs, design baselines, process

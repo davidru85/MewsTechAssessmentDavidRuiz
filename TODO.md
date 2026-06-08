@@ -11,7 +11,7 @@ The prototype slice is built — these items are now complete:
 - [x] Implement the first **vertical slice** (Room Controls / Dashboard) end-to-end: `:feature:controls:domain` → `:data` (mock) → `:presentation` → `:app` wiring.
 - [x] Believable, time-varying `MockControlsDataSource` (latency + temperature drift + faulty/unknown-device errors).
 - [x] Demo-critical states: loading, content, error (empty intentionally dropped — a room always has controls).
-- [x] Tests for the slice: 18 JVM unit tests (use-case, MockDataSource, ViewModel via Turbine). Compose smoke test deferred (needs emulator/Robolectric).
+- [x] Tests for the slice: 33 JVM unit tests (use-case, MockDataSource, ViewModel via Turbine). Compose smoke test deferred (needs emulator/Robolectric).
 - [x] Wire the Dashboard into the root `NavHost` (placeholder replaced).
 
 Remaining before the live session: rehearse [DEMO_SCRIPT.md](DEMO_SCRIPT.md).
@@ -21,7 +21,7 @@ Remaining before the live session: rehearse [DEMO_SCRIPT.md](DEMO_SCRIPT.md).
 ## Future Product Improvements
 
 - [ ] Additional feature slices by validated priority: Access (keyless entry), Services & chat, Notifications, Profile/Info.
-- [ ] Smart Energy Modes beyond Sleep (Away, Welcome, Wake-up) with manual override + auto-revert.
+- [ ] Smart Energy Scenes beyond the shipped Sleep / Away / Welcome (e.g. Wake-up) with manual override + auto-revert.
 - [ ] Multi-language (i18n) and richer accessibility settings.
 - [ ] In-app nudges and feature-discovery coaching.
 - [ ] **Dashboard a11y pass** (from code review): merge each `LightsCard` row into a single `Role.Switch` click target (one TalkBack swipe per light), and attach a polite `liveRegion` to the busy indicator so command start/finish is announced.

@@ -36,10 +36,10 @@ Legend: ✅ complete · 🟡 in progress / partially built · ⬜ not started.
 ## Evidence in the App vs. Documentation
 
 **In the app today (`com.mews.guestroom`):**
-- Multi-module Gradle build: `:app`, `:core:common`, `:core:ui`.
+- Multi-module Gradle build: `:app`, `:core:common`, `:core:ui`, `:feature:controls:domain`, `:feature:controls:data`, `:feature:controls:presentation`.
 - `mock` / `live` product flavors wired in [app/build.gradle.kts](app/build.gradle.kts) — the prototype/production seam is real at the build level.
 - `:core:common` technical utilities (`DataResult`, dispatcher qualifiers); `:core:ui` for theme/tokens.
-- A working **Room Dashboard** ([DashboardScreen.kt](feature/controls/presentation/src/main/kotlin/com/mews/guestroom/feature/controls/presentation/DashboardScreen.kt)) wired into the app NavHost, driven by `MockControlsDataSource` (loading, command latency, temperature drift, error path) — 18 unit tests green.
+- A working **Room Dashboard** ([DashboardScreen.kt](feature/controls/presentation/src/main/kotlin/com/mews/guestroom/feature/controls/presentation/DashboardScreen.kt)) wired into the app NavHost, driven by `MockControlsDataSource` (loading, command latency, temperature drift, error path) — 33 unit tests green.
 
 **In documentation:**
 - Full product thinking (problem, discovery, adoption, delivery) across the root docs and `specifications/`.
@@ -52,7 +52,7 @@ Legend: ✅ complete · 🟡 in progress / partially built · ⬜ not started.
 
 - **One feature slice is built (Controls/Dashboard).** Remaining product areas (Access, Services, Notifications, Profile) are documented, not coded — by design for the prototype.
 - **The live data sources do not exist** — only the mock side is built; binding mock/live by product flavor is a Phase-2 item ([ROADMAP.md](ROADMAP.md)). This is by design (assessment requires no backend).
-- **No instrumented/Compose UI tests** run in CI yet (no emulator); behaviour is covered by 18 JVM unit tests across the slice.
+- **No instrumented/Compose UI tests** run in CI yet (no emulator); behaviour is covered by 33 JVM unit tests across the slice.
 
 These gaps are scoped intentionally: the assessment values a validated problem, clear product strategy, and a credible Android foundation over a broad-but-shallow feature set. The roadmap is in [TODO.md](TODO.md).
 
