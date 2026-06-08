@@ -47,9 +47,9 @@
 - **Trailing:** Notifications (bell) and Connection Strength icons.
 
 ### 2. Climate Control (Section)
-- **Primary Display:** Large central temperature (e.g., 23°C) with "Inside Temp" label.
-- **Slider:** Custom slider with a 28dp thumb, high-precision track (16–28°C range).
-- **Target Indicator:** Floating pill above the thumb showing "Target 21°C".
+- **Climate Dial:** A premium circular interactive dial interface replacing the horizontal slider (16–28°C range).
+- **Primary Display:** Centered inside the dial, showing the current/inside temperature (e.g., 23°C) and the target temperature (e.g., "Target 21°C").
+- **Track & Sweep:** The circular track represents the active progress to target. In Light Mode, it sweeps from 12 o'clock clockwise. In Dark Mode, it sweeps similarly with a modern glow accent.
 - **Action Buttons:** Large 50/50 split buttons for "Auto Fan" and "Cooling" (High-fill primary color when active).
 
 ### 3. Atmosphere / Moods (Section)

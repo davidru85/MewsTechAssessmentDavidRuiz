@@ -5,8 +5,11 @@ import androidx.compose.animation.core.animateFloat
 import androidx.compose.animation.core.infiniteRepeatable
 import androidx.compose.animation.core.rememberInfiniteTransition
 import androidx.compose.animation.core.tween
+import androidx.compose.foundation.Canvas
+import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
-import androidx.compose.foundation.interaction.MutableInteractionSource
+import androidx.compose.foundation.gestures.detectDragGestures
+import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -49,8 +52,6 @@ import androidx.compose.material3.Scaffold
 import androidx.compose.material3.SegmentedButton
 import androidx.compose.material3.SegmentedButtonDefaults
 import androidx.compose.material3.SingleChoiceSegmentedButtonRow
-import androidx.compose.material3.Slider
-import androidx.compose.material3.SliderDefaults
 import androidx.compose.material3.SnackbarHost
 import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.Surface
@@ -66,13 +67,20 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.alpha
+import androidx.compose.ui.draw.clip
+import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.StrokeCap
+import androidx.compose.ui.graphics.drawscope.DrawScope
+import androidx.compose.ui.graphics.drawscope.Stroke
 import androidx.compose.ui.graphics.vector.ImageVector
+import androidx.compose.ui.input.pointer.pointerInput
+import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
-import androidx.compose.ui.unit.DpSize
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
@@ -251,80 +259,160 @@ private fun ClimateSection(
     onSetClimateMode: (ClimateMode) -> Unit,
 ) {
     SectionCard(title = "Climate Control") {
-        // Local thumb position during a drag so it moves smoothly; we dispatch a single command on
-        // release. Re-keyed on the confirmed target so backend/scene updates re-sync the thumb.
-        var sliderValue by remember(climate.targetCelsius) {
+        var dialValue by remember(climate.targetCelsius) {
             mutableFloatStateOf(climate.targetCelsius.toFloat())
         }
 
-        // Primary display: large central temperature + label.
         Column(
             modifier = Modifier.fillMaxWidth(),
             horizontalAlignment = Alignment.CenterHorizontally,
         ) {
-            Text(
-                text = "${climate.currentCelsius.roundToInt()}°C",
-                style = MaterialTheme.typography.displayLarge,
-                color = MaterialTheme.colorScheme.onSurface,
-            )
-            Text(
-                text = "Inside Temp",
-                style = MaterialTheme.typography.bodyMedium,
-                color = MaterialTheme.colorScheme.onSurfaceVariant,
+            ClimateDial(
+                value = dialValue,
+                currentCelsius = climate.currentCelsius,
+                onValueChange = { dialValue = it },
+                onValueChangeFinished = { onTargetTemperatureChange(dialValue.roundToInt()) },
             )
         }
-
-        TargetSlider(
-            value = sliderValue,
-            onValueChange = { sliderValue = it },
-            onValueChangeFinished = { onTargetTemperatureChange(sliderValue.roundToInt()) },
-        )
 
         ClimateModeButtons(climate.mode, onSetClimateMode)
     }
 }
 
-@OptIn(ExperimentalMaterial3Api::class)
 @Composable
-private fun TargetSlider(
+private fun ClimateDial(
     value: Float,
+    currentCelsius: Double,
     onValueChange: (Float) -> Unit,
     onValueChangeFinished: () -> Unit,
+    modifier: Modifier = Modifier,
 ) {
     val fraction = ((value - MIN_TEMP) / (MAX_TEMP - MIN_TEMP)).coerceIn(0f, 1f)
-    val interactionSource = remember { MutableInteractionSource() }
-    Column(modifier = Modifier.fillMaxWidth()) {
-        // Floating "Target XX°C" pill that tracks the thumb horizontally.
-        Box(modifier = Modifier.fillMaxWidth().height(32.dp)) {
-            Surface(
-                shape = CircleShape,
-                color = MaterialTheme.colorScheme.primary,
-                modifier = Modifier
-                    .align(Alignment.CenterStart)
-                    .fillMaxWidth(fraction)
-                    .wrapContentSize(Alignment.CenterEnd),
-            ) {
-                Text(
-                    text = "Target ${value.roundToInt()}°C",
-                    style = MaterialTheme.typography.labelMedium,
-                    color = MaterialTheme.colorScheme.onPrimary,
-                    modifier = Modifier.padding(horizontal = 10.dp, vertical = 4.dp),
-                )
-            }
+
+    Box(
+        modifier = modifier
+            .size(240.dp)
+            .padding(12.dp),
+        contentAlignment = Alignment.Center,
+    ) {
+        val primaryColor = MaterialTheme.colorScheme.primary
+        val outlineVariant = MaterialTheme.colorScheme.outlineVariant
+        val backgroundColor = MaterialTheme.colorScheme.background
+        val isDark = isSystemInDarkTheme()
+
+        Canvas(
+            modifier = Modifier
+                .fillMaxSize()
+                .pointerInput(Unit) {
+                    val updateValue: (Offset) -> Unit = { position ->
+                        val center = Offset(size.width / 2f, size.height / 2f)
+                        val dx = position.x - center.x
+                        val dy = position.y - center.y
+                        val angleRad = kotlin.math.atan2(dy, dx)
+                        var angleDeg = Math.toDegrees(angleRad.toDouble()).toFloat()
+                        // Adjust so top (12 o'clock) is 0 degrees, sweeping clockwise
+                        var adjustedAngle = angleDeg + 90f
+                        if (adjustedAngle < 0f) adjustedAngle += 360f
+                        val newFraction = (adjustedAngle / 360f).coerceIn(0f, 1f)
+                        val newValue = MIN_TEMP + newFraction * (MAX_TEMP - MIN_TEMP)
+                        onValueChange(newValue.coerceIn(MIN_TEMP, MAX_TEMP))
+                    }
+
+                    detectDragGestures(
+                        onDragStart = { offset ->
+                            updateValue(offset)
+                        },
+                        onDrag = { change, _ ->
+                            change.consume()
+                            updateValue(change.position)
+                        },
+                        onDragEnd = {
+                            onValueChangeFinished()
+                        },
+                        onDragCancel = {
+                            onValueChangeFinished()
+                        },
+                    )
+                },
+        ) {
+            drawDial(fraction, primaryColor, outlineVariant, backgroundColor, isDark)
         }
-        Slider(
-            value = value,
-            onValueChange = onValueChange,
-            onValueChangeFinished = onValueChangeFinished,
-            valueRange = MIN_TEMP..MAX_TEMP,
-            interactionSource = interactionSource,
-            thumb = {
-                SliderDefaults.Thumb(
-                    interactionSource = interactionSource,
-                    thumbSize = DpSize(28.dp, 28.dp),
-                )
-            },
+
+        ClimateDialLabel(value = value, currentCelsius = currentCelsius)
+    }
+}
+
+@Composable
+private fun ClimateDialLabel(value: Float, currentCelsius: Double) {
+    Column(
+        horizontalAlignment = Alignment.CenterHorizontally,
+    ) {
+        Text(
+            text = "Inside Temp",
+            style = MaterialTheme.typography.bodyMedium,
+            color = MaterialTheme.colorScheme.onSurfaceVariant,
         )
+        Spacer(modifier = Modifier.height(4.dp))
+        Text(
+            text = "${currentCelsius.roundToInt()}°C",
+            style = MaterialTheme.typography.displayLarge.copy(fontWeight = FontWeight.Bold),
+            color = MaterialTheme.colorScheme.onSurface,
+        )
+        Spacer(modifier = Modifier.height(8.dp))
+        Surface(
+            shape = CircleShape,
+            color = MaterialTheme.colorScheme.primary.copy(alpha = 0.12f),
+        ) {
+            Text(
+                text = "Target ${value.roundToInt()}°C",
+                style = MaterialTheme.typography.labelMedium.copy(fontWeight = FontWeight.Bold),
+                color = MaterialTheme.colorScheme.primary,
+                modifier = Modifier.padding(horizontal = 12.dp, vertical = 6.dp),
+            )
+        }
+    }
+}
+
+private fun DrawScope.drawDial(
+    fraction: Float,
+    primaryColor: Color,
+    outlineVariant: Color,
+    backgroundColor: Color,
+    isDark: Boolean,
+) {
+    val strokeWidth = 8.dp.toPx()
+    val innerRadius = (size.minDimension - strokeWidth) / 2f
+
+    // Draw background circle
+    drawCircle(
+        color = if (isDark) Color.White.copy(alpha = 0.05f) else outlineVariant.copy(alpha = 0.2f),
+        radius = innerRadius,
+        style = Stroke(width = strokeWidth),
+    )
+
+    // Draw active arc (from 12 o'clock, which is -90 degrees, sweeping clockwise)
+    drawArc(
+        color = primaryColor,
+        startAngle = -90f,
+        sweepAngle = fraction * 360f,
+        useCenter = false,
+        style = Stroke(width = strokeWidth, cap = StrokeCap.Round),
+    )
+
+    // Draw thumb handle at the end of the active arc
+    val angleRad = Math.toRadians((fraction * 360f - 90f).toDouble())
+    val thumbX = (center.x + innerRadius * kotlin.math.cos(angleRad)).toFloat()
+    val thumbY = (center.y + innerRadius * kotlin.math.sin(angleRad)).toFloat()
+
+    if (isDark) {
+        // Dark mode: filled primary thumb with border/glow representation
+        drawCircle(color = primaryColor, center = Offset(thumbX, thumbY), radius = 12.dp.toPx())
+        drawCircle(color = backgroundColor, center = Offset(thumbX, thumbY), radius = 8.dp.toPx())
+        drawCircle(color = primaryColor, center = Offset(thumbX, thumbY), radius = 4.dp.toPx())
+    } else {
+        // Light mode: white thumb with primary border
+        drawCircle(color = primaryColor, center = Offset(thumbX, thumbY), radius = 12.dp.toPx())
+        drawCircle(color = Color.White, center = Offset(thumbX, thumbY), radius = 9.dp.toPx())
     }
 }
 
@@ -493,15 +581,27 @@ private fun SunriseVista() {
         modifier = Modifier
             .fillMaxWidth()
             .height(140.dp)
-            .background(
-                brush = Brush.linearGradient(SunriseColors),
-                shape = MaterialTheme.shapes.medium,
-            ),
+            .clip(MaterialTheme.shapes.medium),
         contentAlignment = Alignment.Center,
     ) {
+        Image(
+            painter = painterResource(id = com.mews.guestroom.core.ui.R.drawable.sunrise_vista),
+            contentDescription = "Sunrise Vista",
+            modifier = Modifier.fillMaxSize(),
+            contentScale = ContentScale.Crop,
+        )
+        Box(
+            modifier = Modifier
+                .fillMaxSize()
+                .background(
+                    Brush.verticalGradient(
+                        colors = listOf(Color.Transparent, Color.Black.copy(alpha = 0.6f)),
+                    ),
+                ),
+        )
         Text(
             text = "Sunrise Vista",
-            style = MaterialTheme.typography.titleMedium,
+            style = MaterialTheme.typography.titleMedium.copy(fontWeight = FontWeight.Bold),
             color = Color.White,
             textAlign = TextAlign.Center,
         )
@@ -555,11 +655,6 @@ private fun EnergyScene.icon(): ImageVector =
 private fun String.label(): String = lowercase().replaceFirstChar { it.uppercase() }
 
 private val SyncGreen = Color(0xFF3DDC84)
-private val SunriseColors = listOf(
-    Color(0xFFFFB36B),
-    Color(0xFFFF8C66),
-    Color(0xFF8E5A9E),
-)
 
 private val OUTER_MARGIN = 16.dp
 private val CARD_GAP = 16.dp
