@@ -36,7 +36,28 @@ Then a short, **skippable** first-run tour of the top 3 features (thermostat, li
 
 ## Success Metrics
 
-### Adoption funnel
+Metrics form **one unified adoption funnel** with three sequential phases. Thresholds differ by phase because each measures a different mechanism at a different maturity — they are stages of the *same* funnel, not competing numbers.
+
+| Phase | When | Mechanism | Headline gate |
+|---|---|---|---|
+| **1 — Validation** | Pre-build | Cold nightstand QR/NFC fake-door | Scan >25% of guests · landing→intent >40% of scanners (see [PRODUCT_DISCOVERY.md](PRODUCT_DISCOVERY.md)) |
+| **2 — Pilot (~10 rooms)** | Post-build, pre-rollout | Automated vs. control rooms | Measurable energy + satisfaction delta vs. control (gate to scale) |
+| **3 — Adoption (scale)** | Post-launch, property-wide | Warm captive-portal / NFC onboarding | Portal click-through >60% · install after prompt >40% |
+
+> **Why Phase 1 (>25%) and Phase 3 (>60%) differ:** Phase 1 is a *cold* demand signal from an unfamiliar QR with no product behind it; Phase 3 is a *warm* captive-portal tap at check-in on an already-launched property. Different stages and baselines — not a contradiction.
+
+### Phase 2 — Pilot (~10 rooms)
+
+The bridge between fake-door validation and property-wide rollout: ~10 stratified rooms, automated vs. control, gated on a measurable delta before scaling ([ROADMAP.md](ROADMAP.md) Phase 2). The pilot reuses the operational/satisfaction targets below as its go/no-go gate:
+
+| Pilot gate | Target | Source |
+|---|---|---|
+| kWh reduction per automated room | 20–35% vs. control | Energy telemetry + control group |
+| Comfort satisfaction delta | +0.3 to +0.7 | Post-stay survey |
+| Overall stay NPS (automated vs. control) | +10% | Post-stay survey |
+| Rollout decision | explicit go / iterate / hold | Pilot review |
+
+### Phase 3 — Adoption funnel (post-launch, scale)
 | Metric | Target | Source |
 |---|---|---|
 | Captive-portal click-through | >60% | Portal logs |

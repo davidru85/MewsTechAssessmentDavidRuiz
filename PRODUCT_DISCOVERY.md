@@ -84,6 +84,8 @@ A three-tier, evidence-before-code approach:
 
 The discovery phase ends in an explicit **go / iterate / drop** decision backed by these signals, not assumptions.
 
+> These thresholds are **Phase 1 (Validation)** of the unified adoption funnel in [ADOPTION_METRICS.md](ADOPTION_METRICS.md). They measure *cold* demand before any product exists; the **Pilot** (~10 rooms) and **Adoption** (post-launch) phases that follow use different mechanisms and higher baselines, so the numbers are sequential stages — not in conflict.
+
 ---
 
 ## Risks and Mitigations
