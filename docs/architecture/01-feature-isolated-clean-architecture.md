@@ -18,7 +18,7 @@ There is no shared `:core:domain` and no shared `:core:data`.
 
 `core` is technical only:
 
-- `:core:common`: results, dispatchers, clock, logging.
+- `:core:common`: results, dispatcher qualifiers.
 - `:core:ui`: generic theme and UI primitives.
 - `:core:testing`: reusable test utilities.
 

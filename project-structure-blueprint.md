@@ -28,7 +28,7 @@ mappers, and data sources belong to the feature that owns the behavior.
 Shared `core` modules are allowed only for technical, cross-cutting concerns:
 
 ```text
-:core:common   result wrappers, dispatchers, clock, logging
+:core:common   result wrappers, dispatcher qualifiers
 :core:ui       generic theme/tokens/components without business knowledge
 :core:testing  shared test utilities only
 ```

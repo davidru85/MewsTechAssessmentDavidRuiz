@@ -15,10 +15,10 @@ Prove **mobile product thinking and Android craft** for Smart Guest Room Managem
 
 The demo-critical flow is the **Room Dashboard**:
 
-1. Guest opens the app → lands on a **Dashboard** showing room state at a glance (temperature, lights, blinds, energy mode).
-2. Guest adjusts the **thermostat** (slider/dial) → state updates reactively.
+1. Guest opens the app → lands on a **Dashboard** showing room state at a glance (temperature, climate mode, lights, blinds, energy scenes).
+2. Guest adjusts the **thermostat** (slider/dial) → state updates reactively; switching the **climate mode** (Auto Fan / Cooling) changes how the room drifts (in Cooling it never drifts warmer).
 3. Guest toggles **lights / blinds**.
-4. Guest taps a **Smart Energy Mode** ("Sleep Mode") → multiple subsystems change in one action.
+4. Guest taps a **Smart Energy Scene** (Sleep / Away / Welcome) → multiple subsystems change in one action.
 5. Mock data **simulates drift** (e.g. ambient temperature gradually moves toward the set point while AC runs), so the screen is not static.
 
 This is the 60–90 second path scripted in [DEMO_SCRIPT.md](DEMO_SCRIPT.md).
@@ -32,7 +32,7 @@ This is the 60–90 second path scripted in [DEMO_SCRIPT.md](DEMO_SCRIPT.md).
 | Screen | Purpose | State today |
 |---|---|---|
 | **Dashboard** ([DashboardScreen.kt](feature/controls/presentation/src/main/kotlin/com/mews/guestroom/feature/controls/presentation/DashboardScreen.kt)) | Room state at a glance: climate, scenes, lights, blinds | ✅ Implemented |
-| **Climate control** | Thermostat set point via slider (clamped 16–28°C) | ✅ Implemented (in Dashboard) |
+| **Climate control** | Thermostat set point via slider (clamped 16–28°C) + climate modes (Auto Fan / Cooling) | ✅ Implemented (in Dashboard) |
 | **Lighting & blinds** | Per-device toggles + blind position | ✅ Implemented (in Dashboard) |
 | Access / keyless entry | Phone-as-key + audit log | ⬜ Future feature |
 | Services & chat | Front-desk requests, add-ons | ⬜ Future feature |
@@ -55,13 +55,13 @@ No persistence, network, PMS auth, BLE, or real hardware is required to run the 
 
 - Reactive state: Compose screens collect `StateFlow<UiState>` via `collectAsStateWithLifecycle()`.
 - One-shot events (snackbars, navigation) use `SharedFlow` (replay = 0).
-- One-tap orchestration: an "energy mode" use case sets several device states atomically.
+- One-tap orchestration: an energy-scene use case (Sleep / Away / Welcome) sets several device states atomically.
 
 ---
 
 ## Demo-Critical States
 
-For a convincing demo, the prototype shows: **loading**, **content** (room state at a glance), an **error** snackbar (e.g. toggling the faulty Bathroom light), and **on/off** device states — all driven from mock data. There is no empty state: a hotel room always has controls.
+For a convincing demo, the prototype shows: **loading**, **content** (room state at a glance), a surfaced **error** path — the deliberately faulty Bathroom light shows a warning icon and a disabled switch (transient command failures also raise a snackbar) — and **on/off** device states, all driven from mock data. There is no empty state: a hotel room always has controls.
 
 ---
 

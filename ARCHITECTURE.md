@@ -19,7 +19,7 @@ Implemented today:
 
 ```text
 :app            Composition root, Android application, build flavors, root NavHost
-:core:common    Result wrappers (DataResult), dispatcher qualifiers, clock, logging
+:core:common    Result wrappers (DataResult), dispatcher qualifiers
 :core:ui        Material 3 theme, design tokens, generic UI primitives (no business logic)
 ```
 

@@ -2,7 +2,7 @@
 
 > An actionable pre-submission / pre-demo gate. Distinct from [ASSESSMENT_ALIGNMENT.md](ASSESSMENT_ALIGNMENT.md) (which *maps* requirements to evidence) — this is the runnable checklist you tick off before sharing the repo or presenting.
 >
-> **Verification run — 2026-06-05** (Pixel_9a emulator, `mockDebug`, JDK 17): scripted flow exercised live — content render, temperature drift (24→21→18°C), error snackbar on the faulty Bathroom light (state unchanged), and Sleep-scene orchestration (lights off + blinds closed + 18°C). No crashes/ANRs. Items below are ticked from that run + the green CI on `main`; remaining unticked items are **presenter-only** (live timing, presentation delivery) or the deferred Compose smoke test.
+> **Verification run — 2026-06-05** (Pixel_9a emulator, `mockDebug`, JDK 17): scripted flow exercised live — content render, temperature drift (24→21→18°C), the faulty Bathroom light surfaced via a warning icon + disabled switch (state unchanged), and Sleep-scene orchestration (lights off + blinds closed + 18°C). No crashes/ANRs. Items below are ticked from that run + the green CI on `main`; remaining unticked items are **presenter-only** (live timing, presentation delivery) or the deferred Compose smoke test.
 
 ---
 
